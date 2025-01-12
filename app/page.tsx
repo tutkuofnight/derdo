@@ -46,7 +46,7 @@ export default function Home() {
           </div>
         </div>
         <div className="flex h-full items-center">
-          <Disc3 className="w-40 h-40 lg:w-72 lg:h-72 text-gray-100 animate-spin duration-disc-spin absolute -z-10 top-[8px] right-[9px] lg:relative lg:top-0 lg:right-0 lg:text-black" />
+          <Disc3 className="w-40 h-40 lg:w-72 lg:h-72 text-gray-100 animate-spin duration-disc-spin absolute -z-10 top-[8px] right-[9px] lg:relative lg:top-0 lg:right-0 lg:text-black lg:dark:text-white" />
           {/* <Music4 className="lg:w-72 lg:h-72 text-blue-600 absolute right-[105px] top-[100px]" /> */}
         </div>
       </section>
@@ -56,7 +56,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold">Features</h2>
           <div className="flex flex-col md:flex-row w-full gap-4">
             {featuresData.map((feature, index) => (
-              <div key={index} className="flex flex-col items-center w-full gap-2 p-4 rounded-md border cursor-pointer border-gray-200 transition-all duration-300 hover:border-black">
+              <div key={index} className="flex flex-col items-center w-full gap-2 p-4 rounded-md border cursor-pointer border-gray-200 dark:border-gray-600 transition-all duration-300 hover:border-black hover:dark:border-white">
                 {feature.icon}
                 <h3 className="text-xl font-bold">{feature.title}</h3>
                 <p className="text-center">{feature.description}</p>

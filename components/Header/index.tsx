@@ -17,9 +17,11 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import UploadForm from "@/components/UploadForm"
+import ThemeSwithcer from "@/components/ThemeSwitcher"
 
 export default function Header() {
   const { data:session, status } = useSession()
@@ -46,10 +48,12 @@ export default function Header() {
                 Upload
               </Button>
             </DialogTrigger>
+            <DialogTitle className="hidden" />
             <DialogContent>
               <UploadForm />
             </DialogContent>
           </Dialog>
+          <ThemeSwithcer />
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Image src={session.user?.image as string} alt={session.user?.name as string}  width={36} height={36} className="rounded-full" />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import StoreProvider from "@/store/StoreProvider"
-// import { ThemeProvider } from "@/components/providers/ThemeProvider"
+import { ThemeProvider } from "@/components/providers/ThemeProvider"
 import SessionProvider from "@/components/providers/SessionProvider"
 import Header from "@/components/Header"
 import { Toaster } from "@/components/ui/toaster"
@@ -64,9 +64,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>
           <StoreProvider>
-            <Header />
-            {children}
-            <Toaster />
+            <ThemeProvider           
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange>
+              <Header />
+              {children}
+              <Toaster />
+            </ThemeProvider>
           </StoreProvider>
         </SessionProvider>
       </body>

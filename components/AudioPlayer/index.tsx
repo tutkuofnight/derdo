@@ -67,7 +67,7 @@ export default function () {
 
 
   return <>{currentTrack ? (
-    <div className="w-full p-4 py-5 bg-slate-50 border-t flex items-center justify-center gap-64 fixed bottom-0 left-0 ">
+    <div className="w-full p-4 py-5 bg-background border-t flex items-center justify-center gap-64 fixed bottom-0 left-0 ">
       {/* <Slider defaultValue={0} max={audioRef.current?.duration} step={0.000001} value={playerDuration} /> */}
       {/* <Info song={currentTrack} /> */}
       <audio 
