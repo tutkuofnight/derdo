@@ -18,19 +18,14 @@ const featuresData: any[] = [
     description: "Listen music together with your friends in real-time.",
     icon: (
       <div className="flex items-center relative">
-        <User className="w-14 h-14 mb-8" />
-        <div className="flex items-center gap-1">
-          <div className="flex flex-col  *:-mt-6">
-            <MoveLeft className="w-7 h-7 rotate-[30deg] mb-2" />
-            <MoveRight className="w-7 h-7 rotate-[30deg] mt-2" />
-          </div>
-          <Music4 className="w-10 h-10" />
-          <div className="flex flex-col  *:-mt-6 mt-12">
-            <MoveLeft className="w-7 h-7 rotate-[30deg] mb-2" />
-            <MoveRight className="w-7 h-7 rotate-[30deg] mt-2" />
+        <User className="w-14 h-14" />
+        <div className="flex items-center gap-1 mt-6">
+          <div className="flex flex-col *:-mt-6">
+            <MoveLeft className="w-7 h-7 mb-2" />
+            <MoveRight className="w-7 h-7 mt-2" />
           </div>
         </div>
-        <User className="w-14 h-14 mt-8" />
+        <User className="w-14 h-14" />
       </div>
     ),
   },
@@ -59,9 +54,9 @@ export default function Home() {
       <section>
         <div className="flex flex-col items-center gap-4 rounded-md">
           <h2 className="text-3xl font-bold">Features</h2>
-          <div className="flex flex-col w-full md:[&>*:nth-child(even)]:mr-0 md:[&>*:nth-child(even)]:ml-auto gap-4">
+          <div className="flex flex-col md:flex-row w-full gap-4">
             {featuresData.map((feature, index) => (
-              <div key={index} className="flex flex-col items-center w-full md:w-[350px] gap-2 p-4 rounded-md border cursor-pointer border-gray-200 py-6 transition-all duration-300 hover:border-black">
+              <div key={index} className="flex flex-col items-center w-full gap-2 p-4 rounded-md border cursor-pointer border-gray-200 transition-all duration-300 hover:border-black">
                 {feature.icon}
                 <h3 className="text-xl font-bold">{feature.title}</h3>
                 <p className="text-center">{feature.description}</p>
