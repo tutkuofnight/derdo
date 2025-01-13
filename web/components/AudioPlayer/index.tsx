@@ -3,14 +3,16 @@ import { useEffect, useRef, useState } from "react"
 import useSocket from "@/hooks/useSocket"
 // import { Play, Pause } from "lucide-react"
 import { getVolume, setVolume } from "./functions"
-import { tracks } from "@/store"
+import { tracks, roomId } from "@/store"
 import { useAtom } from "jotai"
 import { Song } from "@/types"
-
+import { useSession } from "next-auth/react"
 export default function () {
   const [playerDuration, setPlayerDuration] = useState<number>(0)
   const audioRef = useRef<HTMLMediaElement>(null)
   const [tracklist,] = useAtom(tracks)
+  const [room,] = useAtom(roomId)
+  const { data: session } = useSession()
   const { setTrack, playMusic, pauseMusic, timeSeeked, audioPlayerState, currentTrack } = useSocket()
 
   useEffect(() => {
@@ -24,7 +26,11 @@ export default function () {
       // audio.addEventListener('timeupdate', (e: any) => setPlayerDuration(e.target.currentTime))
       audio.addEventListener('play', playMusic)
       audio.addEventListener('pause', pauseMusic)
-      audio.addEventListener("ended", () => setNextTrack())
+      audio.addEventListener("ended", () => {
+        if(session?.user.id === room) {
+          setNextTrack()
+        }
+      })
       audio.addEventListener('seeked', () => timeSeeked(audioRef.current?.currentTime))
       audio.addEventListener("volumechange", () => setVolume(audioRef))
 
