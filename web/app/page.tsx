@@ -46,7 +46,7 @@ export default function Home() {
           </div>
         </div>
         <div className="flex h-full items-center">
-          <Disc3 className="w-40 h-40 lg:w-72 lg:h-72 text-gray-100 animate-spin duration-disc-spin absolute -z-10 top-[8px] right-[9px] lg:relative lg:top-0 lg:right-0 lg:text-black lg:dark:text-white" />
+          <Disc3 className="w-40 h-40 lg:w-72 lg:h-72 text-gray-100 dark:text-white dark:text-opacity-5 animate-spin duration-disc-spin absolute -z-10 top-[8px] right-[9px] lg:relative lg:top-0 lg:right-0 lg:text-black lg:dark:text-white" />
           {/* <Music4 className="lg:w-72 lg:h-72 text-blue-600 absolute right-[105px] top-[100px]" /> */}
         </div>
       </section>
