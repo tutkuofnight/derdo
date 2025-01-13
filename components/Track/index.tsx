@@ -1,5 +1,5 @@
 "use client"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 import { Play, Pause } from "lucide-react"
 import { currentPlaying, playerState } from "@/store"
 import { useAtom } from "jotai"

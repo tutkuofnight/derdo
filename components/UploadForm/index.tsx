@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 import { saveTrack } from "@/app/actions"
 import { UploadFormSchema } from "@/lib/schemas"
 

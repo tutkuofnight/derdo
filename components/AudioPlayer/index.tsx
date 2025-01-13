@@ -5,7 +5,7 @@ import useSocket from "@/hooks/useSocket"
 import { getVolume, setVolume } from "./functions"
 import { tracks } from "@/store"
 import { useAtom } from "jotai"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 
 export default function () {
   const [playerDuration, setPlayerDuration] = useState<number>(0)

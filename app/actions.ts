@@ -1,6 +1,6 @@
 "use server"
 import db from "@/config/db"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 import { cookies } from 'next/headers'
 
 export const setCookie = async (userId: string) => {

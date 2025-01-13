@@ -1,5 +1,5 @@
 import { atom } from "jotai"
-import { ListenerUser, PlayerState, Song } from "@/types"
+import { ListenerUser, PlayerState, Song } from "@/shared/types"
 
 export const playerState = atom<PlayerState | null>(null)
 

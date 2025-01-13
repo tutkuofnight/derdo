@@ -51,8 +51,9 @@ export interface ExtendedProfile extends Profile {
 
 export type Room = {
     id: string,
-    playlist: Playlist
-    currentTrack: Song
+    playlistId?: string
+    currentTrack?: Song
     users: ListenerUser[]
-    playerState: PlayerState
+    playerState?: PlayerState
+    creator: User
 }

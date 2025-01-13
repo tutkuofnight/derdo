@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 
 export const UploadFormSchema: z.ZodSchema<Song> = z.object({
   id: z.string().uuid(),

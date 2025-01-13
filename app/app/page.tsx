@@ -2,7 +2,7 @@ import Profile from "@/components/Profile"
 import Playlist from "@/components/Playlist"
 import AudioPlayerDefault from "@/components/AudioPlayer/default"
 import db from "@/config/db"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 import { cookies } from 'next/headers'
 
 export default async function () {

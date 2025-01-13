@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import db from "@/config/db"
-import { ExtendedProfile, User } from "@/types"
+import { ExtendedProfile, User } from "@/shared/types"
 import { setCookie } from "@/app/actions"
 
 const handler = NextAuth({

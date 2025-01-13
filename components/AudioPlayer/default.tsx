@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { getVolume, setVolume } from "./functions"
 import { useAtom } from "jotai"
 import { currentPlaying, tracks, playerState } from "@/store"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 
 export default function () {
   const audioRef = useRef<HTMLAudioElement>(null)

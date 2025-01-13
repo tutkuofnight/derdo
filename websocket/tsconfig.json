@@ -6,8 +6,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": "./",
-    "types": ["node", "express"]
+    "rootDir": "../",
+    "types": ["node", "express"],
+    "paths": {
+      "@/*": ["./*"],
+      "@shared/*": ["../shared/*"]
+    }
   },
   "include": ["./**/*.ts"]
 }

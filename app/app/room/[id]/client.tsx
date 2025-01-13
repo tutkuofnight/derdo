@@ -6,7 +6,7 @@ import { useAtom } from "jotai"
 import { roomId as roomIdStore, listeners } from "@/store"
 
 import Playlist from "@/components/Playlist"
-import { ListenerUser } from "@/types"
+import { ListenerUser } from "@/shared/types"
 
 export default function({ roomId, songs, playlistName }: { roomId: string, songs: any[], playlistName: string }) {
   const [,setRoomIdState] = useAtom(roomIdStore) 

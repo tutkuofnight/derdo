@@ -12,7 +12,7 @@ import { tracks, listeners, currentPlaying, playerState } from "@/store"
 import { Card, Info } from "@/components/Track"
 import Listeners from "@/components/Listeners"
 import { Button } from "@/components/ui/button"
-import { Song } from "@/types"
+import { Song } from "@/shared/types"
 import { useEffect } from "react"
 
 export default function Playlist({ playlist, className, playlistName }: { playlist: any[], className?: string, playlistName?: string }) {
