@@ -1,5 +1,3 @@
-import { Profile } from "next-auth"
-
 export type UploadForm = {
     name: string
     artist: string
@@ -41,19 +39,20 @@ export type User = {
 }
 
 export type ListenerUser = {
+    socketId?: string
     name: string
     image: string
-}
-
-export interface ExtendedProfile extends Profile {
-    picture?: string
 }
 
 export type Room = {
     id: string,
     playlistId?: string
     currentTrack?: Song
-    users: ListenerUser[]
     playerState?: PlayerState
     creator: User
+}
+
+export type RoomUsers = {
+    roomId: string
+    users: ListenerUser[]
 }
