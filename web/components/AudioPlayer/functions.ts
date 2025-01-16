@@ -1,10 +1,11 @@
 "use client"
 
-export const getVolume = () => {
+export const getVolume = (): number => {
   const volume = localStorage.getItem("vol")
   if (volume){
     return parseFloat(volume)
   }
+  return 0
 }
 
 export const setVolume = (audioRef: any) => {

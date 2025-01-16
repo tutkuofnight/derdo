@@ -61,9 +61,7 @@ export default function Playlist({ playlist, className, playlistName }: { playli
       <div>
         {playlist.map((song: any, index: number) => (
           <button className="w-full cursor-pointer" key={index} onClick={() => handleCardClick(song)}>
-            <Card trackId={song.id}>
-              <Info song={song} />
-            </Card>
+            <Card song={song} />
           </button>
         ))}
       </div>
