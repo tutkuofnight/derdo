@@ -38,7 +38,7 @@ export default function Volume({ audioRef }: {audioRef: any}){
   }, [mute])
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="hidden sm:flex sm:items-center sm:gap-2">
       <Slider className="w-[80px]" defaultValue={[volumeState]} max={1} step={0.01} onValueChange={(e) => onChange(e[0])} />
         <button onClick={() => setMute(!mute)}>
           { VolumeIcon() }
