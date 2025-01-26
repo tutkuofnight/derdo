@@ -13,14 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle
-} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import UploadForm from "@/components/UploadForm"
 import ThemeSwithcer from "@/components/ThemeSwitcher"
 
 export default function Header() {
@@ -41,18 +34,12 @@ export default function Header() {
     else if (status == "authenticated") {
       return (
         <div className="flex items-center gap-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="font-bold">
-                <CloudUpload />
-                Upload
-              </Button>
-            </DialogTrigger>
-            <DialogTitle className="hidden" />
-            <DialogContent>
-              <UploadForm />
-            </DialogContent>
-          </Dialog>
+          <Link href="/app/upload">
+            <Button className="font-bold">
+              <CloudUpload />
+              Upload
+            </Button>
+          </Link>
           <ThemeSwithcer />
           <DropdownMenu>
             <DropdownMenuTrigger>
