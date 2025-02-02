@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "nodemon server.ts"
+    "dev": "ts-node server.ts"
   },
   "author": "Tutku Ucan",
   "license": "ISC",

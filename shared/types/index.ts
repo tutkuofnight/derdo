@@ -13,9 +13,10 @@ export type Song = {
     userId: string
 }
 export type PlayerState = {
-    isPlaying?: boolean | null,
-    minutes?: number | null
-    currentTime?: any
+    currentTrack?: Song
+    isPlaying?: boolean | null
+    duration?: number | null
+    currentTime?: number
 }
 
 export type Playlist = {

@@ -1,68 +1,80 @@
-import { createClient, RedisClientType } from "@redis/client"
-import { ListenerUser, PlayerState, Room, Song } from "@shared/types"
+import { createClient } from "@redis/client";
+import { ListenerUser, PlayerState, Room } from "@shared/types";
 
-class RedisService {
-  private client: RedisClientType
-  constructor() {
-    this.client = createClient({ url: process.env.REDIS_URL, legacyMode: true })
-    this.client.on('error', err => console.log('Redis Client Error', err))
-    this.client.connect();
-  }
+const client = createClient({ 
+  url: process.env.REDIS_URL!,
+  legacyMode: false // Changed from true to false for better compatibility
+});
 
-  public async createRoom(roomId: string, data: Room) {
-    return await this.client.hSet("rooms", roomId, JSON.stringify(data))
+client.on('error', err => console.log('Redis Client Error', err));
+client.connect();
+
+class RedisService {  
+  constructor() {}
+
+  // Room Operations
+  public async createRoom(data: Room) {
+    return await client.set(`room:${data.id}`, JSON.stringify(data));
   }
 
   public async getRoom(roomId: string) {
-    return await this.client.hGet("rooms", roomId)
+    if (!roomId) throw new Error("Room ID not set");
+    const result = await client.get(`room:${roomId}`);
+    return result ? JSON.parse(result) as Room : null;
   }
 
-  public async getRoomMembers(roomId: string){
-    return await this.client.lRange(roomId, 0, -1)
-  }
-
-  public async setRoomMember(roomId: string, user: ListenerUser) {
-    return await this.client.lPush(roomId, JSON.stringify(user))
-  }
-
-  public async removeRoomMember(roomId: string, user: ListenerUser) {
-    const userString = JSON.stringify(user);
-    return await this.client.lRem(roomId, 0, userString);
-  }
-
-  public async deleteRoom(roomId: string) {
-    return await this.client.hDel("rooms", roomId)
-  }
-
-  public async saveRoomData(roomId: string, data: Room) {
-    return await this.client.hSet("rooms", roomId, JSON.stringify(data))
-  }
-
-  public async setRoomCurrentTrack(roomId: string, track: Song) {
-    const data = await this.getRoom(roomId)
-    if (!data) {
-      return false
+  // Room Users Operations
+  public async listRoomUsers(roomId: string) {
+    if (!roomId) throw new Error("Room ID not set");
+    const users = await client.hGetAll(`room:users:${roomId}`);
+    if (!users || Object.keys(users).length === 0) {
+      return [];
     }
-    const room = JSON.parse(data) as Room
-    room.currentTrack = track
-    return await this.saveRoomData(roomId, room)
+    const list = Object.values(users).map(user => JSON.parse(user) as ListenerUser);
+    return list
   }
 
-  public async setPlayerState(roomId: string, state: PlayerState) {
-    const data = await this.getRoom(roomId)
-    if (!data) {
-      return false
-    }
-    
-    const room = JSON.parse(data) as Room
-    if (!room.currentTrack) {
-      return false
-    }
-
-    room.playerState = { ...room.playerState, ...state }
-    return await this.saveRoomData(roomId, room)
+  public async setUserToList(user: ListenerUser, roomId: string, socketId: string) {
+    if (!roomId) throw new Error("Room ID or Socket ID not set");
+    return await client.hSetNX(`room:users:${roomId}`, socketId, JSON.stringify(user))
   }
 
+  public async removeUserFromList(socketId: string, roomId: string) {
+    if (!roomId) throw new Error("Room ID not set");
+    await client.hDel(`room:users:${roomId}`, socketId);
+  }
+
+  // Audio Current Time Operations
+  public async setPlayerCurrentTime(value: number, roomId: string) {
+    if (!roomId) throw new Error("Room ID not set");
+    await client.set(
+      `room:${roomId}:current-time`,
+      value.toString(),
+      { EX: 30 }
+    );
+  }
+
+  public async getPlayerCurrentTime(roomId: string) {
+    if (!roomId) throw new Error("Room ID not set");
+    const result = await client.get(`room:${roomId}:current-time`);
+    return result ? parseFloat(result) : 0;
+  }
+
+  // Player State Operations
+  public async setPlayerState(state: PlayerState, roomId: string) {
+    if (!roomId) throw new Error("Room ID not set");
+    const currentState = await this.getPlayerState(roomId);
+    await client.set(
+      `room:${roomId}:player-state`,
+      JSON.stringify({ ...currentState, state })
+    );
+  }
+
+  public async getPlayerState(roomId: string) {
+    if (!roomId) throw new Error("Room ID not set");
+    const result = await client.get(`room:${roomId}:player-state`);
+    return result ? JSON.parse(result) as PlayerState : null;
+  }
 }
 
-export default RedisService
+export default RedisService;

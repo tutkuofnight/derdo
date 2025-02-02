@@ -6,7 +6,7 @@ import bodyParser from "body-parser"
 import path from "node:path"
 import upload from "./config/multer"
 import dotenv from "dotenv"
-import { ListenerUser, Song } from "@shared/types"
+import { ListenerUser, Song, Room } from "@shared/types"
 import RedisService from "./services/RedisService"
 dotenv.config()
 
@@ -51,54 +51,59 @@ io.on("connection", (socket) => {
   const db = new RedisService()
   console.log("a user connected")
 
-  socket.on("create-room", async (room, user) => {
-    await db.createRoom(room.id, room)
-    await db.setRoomMember(room.id, user)
-    socket.join(room.id)
+  socket.on("create-room", async (room: Room, user: ListenerUser) => {
+    await db.setUserToList(user, room.id, socket.id)
+    const result = await db.createRoom(room)
+    io.to(socket.id).emit("room-created", result)
   })
 
   socket.on("join-room", async (user: ListenerUser, roomId: string) => {
     socket.join(roomId)
-    await db.setRoomMember(roomId, user)
-    const room = await db.getRoom(roomId)
-    socket.to(roomId).emit("joined-room", room)
-  })
-  
-  socket.on("room-users", async (roomId: string) => {
-    setTimeout(async () => {
-      const users = await db.getRoomMembers(roomId)
-      socket.to(roomId).emit("room-users", users)
-    }, 200)
+    const res = await db.setUserToList(user, roomId, socket.id)
+    if (res) {
+      const playerCurrentTime = await db.getPlayerCurrentTime(roomId)
+      const users = await db.listRoomUsers(roomId)
+      io.to(socket.id).emit("current-track-time", playerCurrentTime)
+      io.to(roomId).emit("room-users", users)
+    }
   })
 
-  socket.on("set", async (track: Song, room: string) => {
-    await db.setRoomCurrentTrack(room, track)
-    socket.to(room).emit("set", track)
+  socket.on("set", async (track: Song, roomId: string) => {
+    await db.setPlayerState({ currentTrack: track }, roomId)
+    socket.to(roomId).emit("set", track)
   })
 
   socket.on("play", async (state: boolean, roomId: string) => {
-    await db.setPlayerState(roomId, { isPlaying: state })
+    await db.setPlayerState({ isPlaying: state }, roomId)
     socket.to(roomId).emit("play", state)
   })
 
   socket.on("pause", async (state: boolean, roomId: string) => {
-    await db.setPlayerState(roomId, { isPlaying: state })
+    await db.setPlayerState({ isPlaying: state }, roomId)
     socket.to(roomId).emit("pause", state)
   })
 
-  socket.on("timeSeeked", async (duration: number, roomId: string) => {
-    await db.setPlayerState(roomId, { currentTime: duration })
-    socket.to(roomId).emit("timeSeeked", duration)
+  socket.on("time-seeked", async (duration: number, roomId: string) => {
+    await db.setPlayerState({ currentTime: duration }, roomId)
+    socket.to(roomId).emit("time-seeked", duration)
+  })
+  socket.on('room-users', async (roomId: string) => {
+    const userlist = await db.listRoomUsers(roomId)
+    io.to(roomId).emit('room-users', userlist)
   })
 
-  socket.on("leave-room", async (user: ListenerUser, roomId: string) => {
-    await db.removeRoomMember(roomId, user)
-  })
+  socket.on('leave-room', async (roomId: string) => {
+    await db.removeUserFromList(socket.id, roomId)
 
+    const userlist = await db.listRoomUsers(roomId)
+    io.to(roomId).emit("room-users", userlist)
+    
+    socket.disconnect()
+  })
   // Debugging: Check rooms and clients
-  // io.of('/').adapter.rooms.forEach((clients, room) => {
-  //     console.log(`Room: ${room}, Clients: ${[...clients]}`);
-  // });
+  io.of('/').adapter.rooms.forEach((clients, room) => {
+      console.log(`Room: ${room}, Clients: ${[...clients]}`);
+  });
 })
 
 // Start Server
