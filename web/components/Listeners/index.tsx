@@ -19,16 +19,13 @@ import { useAtom } from "jotai"
 
 export default function() {
   const [listenerUsers, setListenerUsers] = useState<ListenerUser[]>([])
-  const { getRoomMembers, socket } = useSocket()
+  const { socket } = useSocket()
   const [room,] = useAtom(roomStore)
   
   useEffect(() => {
-    getRoomMembers(room?.id!)
-    if (socket.connected) {
-      socket.on("room-users", (users: ListenerUser[]) => {
-        setListenerUsers([...users])
-      })
-    }
+    socket.on("room-users", (users: ListenerUser[]) => {
+      setListenerUsers([...users])
+    })
   }, [room?.id])
 
   return (

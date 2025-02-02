@@ -1,7 +1,7 @@
 "use client"
 import { Song } from "@shared/types"
 import { Play, Pause } from "lucide-react"
-import { currentPlaying, playerState } from "@/store"
+import { currentPlaying, playerStateStore } from "@/store"
 import { useAtom } from "jotai"
 import React, { useState, useEffect } from "react"
 
@@ -22,7 +22,7 @@ export const Info = ({ song }: { song: Song }) => {
 
 export const Card = ({ children, trackId }: { children: React.ReactNode, trackId: string }) => {
   const { activeTrack } = useActiveTrack(trackId)
-  const [audioPlayerState,] = useAtom(playerState)
+  const [audioPlayerState,] = useAtom(playerStateStore)
   const activeCard = activeTrack ? "bg-black dark:bg-gray-100 *:text-white rounded-md hover:bg-gray-800 hover:dark:bg-opacity-80" : "bg-transparent *:text-black"
   return (
     <div className={`border-b p-2 px-4 hover:bg-gray-100 hover:dark:bg-white hover:dark:bg-opacity-10 hover:rounded-md transition-colors ${activeCard}`}>

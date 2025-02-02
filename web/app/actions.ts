@@ -1,5 +1,5 @@
 "use server"
-import db from "@/config/db"
+import db from "@/lib/db"
 import { Song } from "@shared/types"
 import { cookies } from 'next/headers'
 

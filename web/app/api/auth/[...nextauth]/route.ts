@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import db from "@/config/db"
+import db from "@/lib/db"
 import { User } from "@shared/types"
 import { setCookie } from "@/app/actions"
 

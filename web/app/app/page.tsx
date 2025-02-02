@@ -1,7 +1,7 @@
 import Profile from "@/components/Profile"
 import Playlist from "@/components/Playlist"
 import AudioPlayerDefault from "@/components/AudioPlayer/default"
-import db from "@/config/db"
+import db from "@/lib/db"
 import { Song } from "@shared/types"
 import { cookies } from 'next/headers'
 

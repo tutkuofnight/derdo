@@ -1,4 +1,4 @@
-import db from "@/config/db"
+import db from "@/lib/db"
 import JoinCard from "./components/JoinCard"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }>}) {

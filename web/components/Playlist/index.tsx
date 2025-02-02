@@ -3,11 +3,11 @@ import useSocket from "@/hooks/useSocket"
 import { usePathname } from "next/navigation"
 
 import { useAtom } from "jotai"
-import { tracks, listeners, currentPlaying, playerState, roomStore } from "@/store"
+import { tracks, currentPlaying, playerStateStore, roomStore } from "@/store"
 
 import { Card, Info } from "@/components/Track"
 import Listeners from "@/components/Listeners"
-import { ListenerUser, Song } from "@shared/types"
+import { Song } from "@shared/types"
 import { useEffect } from "react"
 import CreateRoom from "../CreateRoom"
 import { Button } from "../ui/button"
@@ -16,9 +16,8 @@ import { useRouter } from "next/navigation"
 
 export default function Playlist({ playlist, className, playlistName }: { playlist: any[], className?: string, playlistName?: string }) {
   const [,setTracklist] = useAtom(tracks)
-  const [listenerUsers,] = useAtom(listeners)
   const [currentTrack,] = useAtom(currentPlaying)
-  const [audioPlayerState,setAudioPlayerState] = useAtom(playerState)
+  const [audioPlayerState,setAudioPlayerState] = useAtom(playerStateStore)
   const { setTrack, disconnectRoom } = useSocket()
   const [room,] = useAtom(roomStore)
   const router = useRouter()
@@ -46,11 +45,11 @@ export default function Playlist({ playlist, className, playlistName }: { playli
     <section className={className}>
       <div className="flex items-center justify-between">
         <h1 className="text-sm font-bold my-3 p-1 px-2 bg-black text-white dark:bg-gray-100 dark:text-black inline-block rounded-lg">{playlistName ? playlistName : "Your Playlist"}</h1>
+          { pathname.includes("room") && <Listeners /> }
           { !pathname.includes("room") && playlist.length > 0 ? <CreateRoom /> : 
           <Button size={"icon"} onClick={leaveRoom}>
             <LogOut />
           </Button> }
-          <Listeners />
       </div>
       <div>
         {playlist.map((song: any, index: number) => (

@@ -1,7 +1,7 @@
 import { atom } from "jotai"
 import { ListenerUser, PlayerState, Song, Room } from "@shared/types"
 
-export const playerState = atom<PlayerState | null>(null)
+export const playerStateStore = atom<PlayerState | null>(null)
 
 export const currentPlaying = atom<Song | null>(null)
 

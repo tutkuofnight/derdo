@@ -2,25 +2,19 @@
 import { useEffect } from "react"
 import io from "socket.io-client" 
 import { useSession } from "next-auth/react"
-import { currentPlaying, playerState, roomStore } from "@/store"
+import { currentPlaying, playerStateStore, roomStore } from "@/store"
 import { useAtom } from "jotai"
 import { ListenerUser, Room, Song } from "@shared/types"
 
-const socket = io(process.env.NEXT_PUBLIC_WS_URL, {
-  autoConnect: false,
-})
+const socket = io(process.env.NEXT_PUBLIC_WS_URL)
 
 const useSocket = () => {
   const [currentTrack, setCurrentTrack] = useAtom(currentPlaying)
-  const [audioPlayerState, setAudioPlayerState] = useAtom(playerState)
+  const [audioPlayerState, setAudioPlayerState] = useAtom(playerStateStore)
   const [room, setRoom] = useAtom(roomStore)
   const { data: session } = useSession()
 
   useEffect(() => {
-    socket.on("joined-room", (data) => {
-      console.log(data)
-      setRoom(data.room)
-    })
     socket.on("set", (data) => {
       setCurrentTrack(data.track)
     })
@@ -30,22 +24,29 @@ const useSocket = () => {
     socket.on("pause", (data) => {
       setAudioPlayerState({ isPlaying: data.state })
     })
-    socket.on("timeSeeked", (data) => {
+    socket.on("current-track-time", (data) => {
+      setAudioPlayerState({ ...audioPlayerState, currentTime: data })
+    })
+    socket.on("time-seeked", (data) => {
       setAudioPlayerState({ currentTime: data.duration })
     })
   }, [])
 
-  const createRoom = (room: Room, user: ListenerUser) => {
-    socket.emit("create-room", room, user)
+  const createRoom = (room: Room) => {
     setRoom(room)
+    socket.emit("create-room", room)
   }
 
-  const joinRoom = (user: ListenerUser) => {
-    socket.emit("join-room", user, room)
+  const joinRoom = (roomId: string) => {
+    const user: ListenerUser = {
+      name: session?.user.name!,
+      image: session?.user.image!
+    }
+    socket.emit("join-room", user, roomId)
   }
 
   const setTrack = (track: Song) => {
-    socket.emit("set", track, room)
+    socket.emit("set", track, room?.id)
     setCurrentTrack(track)
   }
 
@@ -54,17 +55,17 @@ const useSocket = () => {
   }
 
   const playMusic = () => {
-    socket.emit("play", { state: true }, room)
+    socket.emit("play", { state: true }, room?.id)
     setAudioPlayerState({ isPlaying: true })
   }
 
   const pauseMusic = () => {
-    socket.emit("pause", { state: false }, room)
+    socket.emit("pause", { state: false }, room?.id)
     setAudioPlayerState({ isPlaying: false })
   }
 
   const timeSeeked = (duration: number) => {
-    socket.emit("time-seeked", duration, room)
+    socket.emit("time-seeked", duration, room?.id)
     setAudioPlayerState({ currentTime: duration })
   }
 

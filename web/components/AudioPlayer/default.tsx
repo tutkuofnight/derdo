@@ -2,13 +2,13 @@
 import { useEffect, useRef, useState } from "react"
 import { getVolume, setVolume } from "./functions"
 import { useAtom } from "jotai"
-import { currentPlaying, tracks, playerState } from "@/store"
+import { currentPlaying, tracks, playerStateStore } from "@/store"
 import { Song } from "@shared/types"
 
 export default function () {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [currentTrack, setCurrentTrack] = useAtom(currentPlaying)
-  const [audioPlayerState, setAudioPlayerState] = useAtom(playerState)
+  const [audioPlayerState, setAudioPlayerState] = useAtom(playerStateStore)
   const [tracklist,] = useAtom(tracks)
 
   useEffect(() => {
