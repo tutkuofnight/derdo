@@ -37,14 +37,28 @@ import { trackUpload, trackImageUpload } from "./config/multer"
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
+  console.log()
   return res.status(200).json({
-    message: "hi, rewind!",
+    message: "hi, derdo!",
   })
 })
 
-app.post("/track/upload/:id", trackUpload.fields([{ name: "song" }, { name: "image" }]), (req: Request, res: Response) => {
+app.post("/track/upload/:id", trackUpload.single("song"), (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
+    url: req.body.trackUrl
+  })
+})
+
+app.post("/track/upload/image/:id", trackImageUpload.single("image"), (req: Request, res: Response) => {
+  if (!req.body.imageName) {
+    return res.status(400).json({
+      message: "image cannot saved :("
+    })
+  }
+  
+  return res.status(200).json({
+    url: req.body.imageUrl
   })
 })
 

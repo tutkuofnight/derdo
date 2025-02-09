@@ -48,7 +48,7 @@ export const Card = ({ song }: { song: Song }) => {
         <Info song={song} insideCard={true} />
       </button>
       <div>
-        <div className={`${activeTrack && 'flex items-center sm:hidden'}`}>
+        <div className={`${activeTrack ? 'flex items-center sm:hidden': 'hidden'}`}>
           {audioPlayerState?.repeat ? (
             <button onClick={handleRepeat}>
               <Repeat1 className="w-[22px] h-[22px] text-white dark:text-black" />

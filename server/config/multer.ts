@@ -10,38 +10,36 @@ const fileInfo = (file: any) => {
   const fileType = fileName.split(".").at(-1)
   return { fileName, fileType }
 }
+const getFullDomain = (req: Request) => {
+  return `${req.protocol}://${req.headers.host}`
+} 
 
 const trackStorage: StorageEngine = multer.diskStorage({
   destination: (req: Request, file: any, cb: any) => {
-    if (file.fieldname === 'image') {
-      cb(null, path.join(__dirname, "../public/uploads/track/image"))
-    } else if (file.fieldname === 'track') {
-      cb(null, path.join(__dirname, "../public/uploads/track"))
-    }
+    cb(null, path.join(__dirname, "../public/uploads/track/"))
   },
   filename: (req: Request, file: any, cb: any) => {
     const { fileType } = fileInfo(file)
     let fileName: string
 
-    if (file.fieldname === 'image' && acceptImageFile.includes(fileType!)) {
-      fileName = `${req.params.id}${path.extname(file.originalname)}`
-    } else if (file.fieldname === 'song' && acceptAudioFile.includes(fileType!)) {
+    if (acceptAudioFile.includes(fileType!)) {
       fileName = `${req.params.id}.mp3`
+      req.body.trackUrl = `${getFullDomain(req)}/uploads/track/${fileName!}`
     }
-    console.log("calisiyor")
     cb(null, fileName!)
   },
 })
 
 const trackImageStorage: StorageEngine = multer.diskStorage({
   destination: (req: Request, file: any, cb: any) => {
-    cb(null, path.join(__dirname, "../public/uploads/track/image"))
+    cb(null, path.join(__dirname, "../public/uploads/track/image/"))
   },
   filename: (req: Request, file: any, cb: any) => {
     const { fileType } = fileInfo(file)
     let fileName: string
     if (acceptImageFile.includes(fileType!)) {
       fileName = `${req.params.id}.${fileType}`
+      req.body.imageUrl = `${getFullDomain(req)}/uploads/track/image/${req.params.id}.${fileType}`
     }
     cb(null, fileName!)
   },
@@ -53,7 +51,6 @@ const trackImageStorage: StorageEngine = multer.diskStorage({
 //     cb(null, path.join(__dirname, "../public/uploads/user/image"))
 //   },
 //   filename: (req: Request, file: any, cb: any) => {
-//     const id = uuidv4()
 //     let fileName = file.originalname.split(" ").join("-")
 
 //     if (fileName.endsWith(".mp3")) {
