@@ -4,8 +4,9 @@ import { getVolume, setVolume } from "./functions"
 import { useAtom } from "jotai"
 import { currentPlaying, tracks, playerState } from "@/store"
 import { Song } from "@/types"
-import { Play, Pause, Disc3, SkipBack, SkipForward, Repeat, Repeat1 } from "lucide-react"
+import { Play, Pause, SkipBack, SkipForward, Repeat, Repeat1 } from "lucide-react"
 import { Info } from "@/components/Track"
+import TrackImage from "../controllers/TrackImage"
 import Volume from "./volume"
 import trackTime from "@/utils/track-time"
 
@@ -18,7 +19,6 @@ export default function () {
   const [tracklist,] = useAtom(tracks)
 
   const [duration, setDuration] = useState<number>(0)
-  const [repeat, setRepeat] = useState<boolean>(false)
 
   useEffect(() => {
     const audio = audioRef.current
@@ -60,7 +60,7 @@ export default function () {
     if (!audio) return
 
     const handleEnded = () => {
-      if (repeat) {
+      if (audioPlayerState?.repeat) {
         rewind()
       } else {
         setNextTrack()
@@ -72,7 +72,7 @@ export default function () {
     return () => {
       audio.removeEventListener("ended", handleEnded)
     }
-  }, [repeat, currentTrack?.id])
+  }, [audioPlayerState?.repeat, currentTrack?.id])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -142,6 +142,10 @@ export default function () {
     audioRef.current.currentTime = newTime
   }
 
+  const changeRepeatStatus = () => {
+    setAudioPlayerState({ ...audioPlayerState, repeat: !audioPlayerState?.repeat })
+  }
+
   return (
     <>
       {currentTrack && (
@@ -151,14 +155,14 @@ export default function () {
           </div>
           <audio 
             ref={audioRef} 
-            src={process.env.NEXT_PUBLIC_TRACK_URL + currentTrack.id + ".mp3"} 
+            src={currentTrack.trackurl} 
             itemType="audio/mpeg"
             className="w-[85%] lg:w-1/3 scale-125"
           />
           <div className="flex flex-1 items-center justify-between px-5">
             <div className="sm:flex sm:items-center sm:gap-2 flex-1">
               <div className="flex items-center gap-2">
-                <Disc3 className={`w-9 h-9 ${audioPlayerState?.isPlaying ? "animate-spin duration-disc-spin": null}`} />
+                <TrackImage url={currentTrack.imageurl} className="w-9 h-9" />
                 <Info song={currentTrack} />
               </div>
               {audioRef.current?.duration && duration ?
@@ -186,14 +190,14 @@ export default function () {
                 <SkipForward className="w-8 h-8" />
               </button>
             </div>
-            <div className="flex flex-1 items-center gap-3 justify-end">
+            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:gap-3 sm:justify-end ">
               <Volume audioRef={audioRef.current} />
-              {repeat ? (
-                <button onClick={() => setRepeat(false)}>
+              {audioPlayerState?.repeat ? (
+                <button onClick={changeRepeatStatus}>
                   <Repeat1 className="w-[22px] h-[22px]" />
                 </button>
               ): (
-                <button onClick={() => setRepeat(true)}>
+                <button onClick={changeRepeatStatus}>
                   <Repeat className="w-[22px] h-[22px] text-black dark:text-white text-opacity-40 dark:text-opacity-40" />
                 </button>
               )}

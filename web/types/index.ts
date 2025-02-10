@@ -12,12 +12,15 @@ export type Song = {
     artist: string
     featurings: string
     song?: string
-    userId: string
+    userid: string
+    imageurl?: string
+    trackurl: string
 }
 export type PlayerState = {
-    isPlaying?: boolean | null,
-    minutes?: number | null
-    currentTime?: any
+    isPlaying?: boolean | null
+    currentTime?: number
+    duration?: number
+    repeat?: boolean
 }
 
 export type Playlist = {

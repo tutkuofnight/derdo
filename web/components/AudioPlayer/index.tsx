@@ -79,7 +79,7 @@ export default function () {
       <audio 
         ref={audioRef} 
         controls 
-        src={process.env.NEXT_PUBLIC_TRACK_URL + currentTrack.id + ".mp3"} 
+        src={currentTrack.trackurl} 
         className="w-[85%] md:w-1/3 scale-125"
       ></audio>
       {/* <button onClick={() => playMusic()}>

@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation"
 import { useAtom } from "jotai"
 import { tracks, listeners, currentPlaying, playerState } from "@/store"
 
-import { Card, Info } from "@/components/Track"
+import { Card } from "@/components/Track"
 import Listeners from "@/components/Listeners"
 import { Button } from "@/components/ui/button"
 import { Song } from "@/types"
@@ -40,14 +40,6 @@ export default function Playlist({ playlist, className, playlistName }: { playli
     router.push("/app/room/" + session?.user.id)
   }
 
-  const handleCardClick = (song: Song) => {
-    if (currentTrack?.id === song.id) {
-      setAudioPlayerState({ isPlaying: !audioPlayerState?.isPlaying })
-    } else {
-      setTrack(song)
-    }
-  }
-
   return (
     <section className={className}>
       <div className="flex items-center justify-between">
@@ -60,9 +52,7 @@ export default function Playlist({ playlist, className, playlistName }: { playli
       </div>
       <div>
         {playlist.map((song: any, index: number) => (
-          <button className="w-full cursor-pointer" key={index} onClick={() => handleCardClick(song)}>
-            <Card song={song} />
-          </button>
+          <Card song={song} key={index} />
         ))}
       </div>
       { !playlist && <p>You don't have any uploaded songs your playlist. Please upload before </p> }

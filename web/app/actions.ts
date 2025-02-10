@@ -14,12 +14,14 @@ export const setCookie = async (userId: string) => {
 }
 
 export const saveTrack = async (data: Song): Promise<boolean> => {
-  await db.query(`INSERT INTO songs (id, name, artist, featurings, userId) VALUES ($1, $2, $3, $4, $5);`, [
+  await db.query(`INSERT INTO songs (id, name, artist, featurings, userid, imageurl, trackurl) VALUES ($1, $2, $3, $4, $5, $6, $7);`, [
     data.id,
     data.name,
     data.artist,
     data.featurings,
-    data.userId,
+    data.userid,
+    data.imageurl,
+    data.trackurl
   ])
   return true
 }
