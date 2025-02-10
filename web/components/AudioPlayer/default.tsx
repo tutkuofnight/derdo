@@ -4,8 +4,9 @@ import { getVolume, setVolume } from "./functions"
 import { useAtom } from "jotai"
 import { currentPlaying, tracks, playerState } from "@/store"
 import { Song } from "@/types"
-import { Play, Pause, Disc3, SkipBack, SkipForward, Repeat, Repeat1 } from "lucide-react"
+import { Play, Pause, SkipBack, SkipForward, Repeat, Repeat1 } from "lucide-react"
 import { Info } from "@/components/Track"
+import TrackImage from "../controllers/TrackImage"
 import Volume from "./volume"
 import trackTime from "@/utils/track-time"
 
@@ -154,14 +155,14 @@ export default function () {
           </div>
           <audio 
             ref={audioRef} 
-            src={process.env.NEXT_PUBLIC_TRACK_URL + currentTrack.id + ".mp3"} 
+            src={currentTrack.trackurl} 
             itemType="audio/mpeg"
             className="w-[85%] lg:w-1/3 scale-125"
           />
           <div className="flex flex-1 items-center justify-between px-5">
             <div className="sm:flex sm:items-center sm:gap-2 flex-1">
               <div className="flex items-center gap-2">
-                <Disc3 className={`w-9 h-9 ${audioPlayerState?.isPlaying ? "animate-spin duration-disc-spin": null}`} />
+                <TrackImage url={currentTrack.imageurl} className="w-9 h-9" />
                 <Info song={currentTrack} />
               </div>
               {audioRef.current?.duration && duration ?

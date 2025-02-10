@@ -3,8 +3,8 @@ import { Song } from "@/types"
 import { Play, Pause, Repeat, Repeat1 } from "lucide-react"
 import { currentPlaying, playerState } from "@/store"
 import { useAtom } from "jotai"
-import React, { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
+import TrackImage from "../controllers/TrackImage"
 
 export const Info = ({ song, insideCard = false }: { song: Song, insideCard?: boolean }) => {
   const { activeTrack } = useActiveTrack(song.id)
@@ -13,7 +13,7 @@ export const Info = ({ song, insideCard = false }: { song: Song, insideCard?: bo
   return (
     <div>
       <p className={`font-bold text-left ${stylingCondition}`}>{song.name}</p>
-      <div className="flex gap-1">
+      <div className="flex gap-1 pb-1">
       <span className={`text-xs ${stylingCondition}`}>{song.artist}</span>
       {
         song.featurings && <div className={`text-xs ${stylingCondition}`}>Feat: {song.featurings}</div>
@@ -45,7 +45,10 @@ export const Card = ({ song }: { song: Song }) => {
     <div className={`flex items-center justify-between border-b p-2 px-4 hover:bg-gray-100 hover:dark:bg-white hover:dark:bg-opacity-10 hover:rounded-md transition-colors ${activeCard}`}>
       <button className="flex items-center gap-4" onClick={() => handleCardClick(song)}>
         { activeTrack && audioPlayerState?.isPlaying ? <Pause className={activeTrack ? "text-white dark:text-black" : "text-black dark:text-white"} /> : <Play className={activeTrack ? "text-white dark:text-black" : "text-black dark:text-white"} /> }
-        <Info song={song} insideCard={true} />
+        <div className="flex items-center gap-2">
+          <TrackImage url={song.imageurl} className="w-[40px] h-[40px]" />
+          <Info song={song} insideCard={true} />
+        </div>
       </button>
       <div>
         <div className={`${activeTrack ? 'flex items-center sm:hidden': 'hidden'}`}>

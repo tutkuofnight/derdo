@@ -44,20 +44,37 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 app.post("/track/upload/:id", trackUpload.single("song"), (req: Request, res: Response) => {
-  return res.status(200).json({
-    success: true,
-    url: req.body.trackUrl
-  })
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded"
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      url: req.body.trackUrl
+    })
+  } catch (error) {
+    console.error('Upload error:', error)
+    return res.status(500).json({
+      success: false,
+      message: "Failed to upload file"
+    })
+  }
 })
 
 app.post("/track/upload/image/:id", trackImageUpload.single("image"), (req: Request, res: Response) => {
-  if (!req.body.imageName) {
+  if (!req.file) {
     return res.status(400).json({
-      message: "image cannot saved :("
+      success: false,
+      message: "No image file uploaded"
     })
   }
   
   return res.status(200).json({
+    success: true,
     url: req.body.imageUrl
   })
 })

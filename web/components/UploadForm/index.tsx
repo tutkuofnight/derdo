@@ -5,23 +5,35 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
-import { Song } from "@/types"
 import { saveTrack } from "@/app/actions"
-// import { UploadFormSchema } from "@/lib/schemas"
-import { Music4, Upload } from "lucide-react"
+import { Music4 } from "lucide-react"
 import { v4 } from "uuid"
+import { Song } from "@/types"
+import { UpdateSongFormDto } from "@/types/dto"
 
-const inputStyles = "font-bold outline-none bg-transparent placeholder:text-white placeholder:text-opacity-20 py-2"
+const inputStyles = "font-bold outline-none bg-transparent py-2"
 
-export default function UploadForm({ type }: {type?: "update" | null}) {
+export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDto }) {
   const formRef = useRef<HTMLFormElement>(null)
   const imagePreviewRef = useRef<HTMLImageElement>(null)
   const [image, setImage] = useState<{ url: string, file: File }>()
+  const [audioFile, setAudioFile] = useState<File>()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
   const { data:session } = useSession()
-  
-  const formData = new FormData()
+
+  useEffect(() => {
+    if (!trackData) return
+
+    const form = formRef.current
+    if (form) {
+      Object.entries(trackData).forEach(data => {
+        if (form[data[0]]) {
+          form[data[0]].value = data[1]
+        }
+      })
+    }
+  }, [trackData])
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +43,7 @@ export default function UploadForm({ type }: {type?: "update" | null}) {
     setIsSubmitting(true)
     const form: any = formRef.current
 
-    if (!formData.has("song")) {
+    if (!audioFile) {
       setIsSubmitting(false)
       toast({
         title: "Error",
@@ -41,6 +53,7 @@ export default function UploadForm({ type }: {type?: "update" | null}) {
       return
     }
     if (!image?.file) {
+      setIsSubmitting(false)
       toast({
         title: "Error",
         description: "Please select a track badge",
@@ -49,22 +62,34 @@ export default function UploadForm({ type }: {type?: "update" | null}) {
       return
     }
 
-    formData.append("image", image?.file!)
-    // const validationResult = UploadFormSchema.parse(data)
-    // console.log(validationResult)
-
     try {
       const dataId = v4()
+      
+      // Audio dosyası için FormData
+      const audioFormData = new FormData()
+      audioFormData.append("song", audioFile)
+      
       const res = await fetch(`${process.env.NEXT_PUBLIC_CS_URL}track/upload/${dataId}`, {
-        body: formData.get("song"),
+        body: audioFormData,
         method: "POST",
       })
+
       if (res.ok) {
         const trackData = await res.json()
+
+        // Image dosyası için FormData
+        const imageFormData = new FormData()
+        imageFormData.append("image", image.file)
+        
         const trackImageResponse = await fetch(`${process.env.NEXT_PUBLIC_CS_URL}track/upload/image/${dataId}`, {
           method: "POST",
-          body: formData.get("image")
+          body: imageFormData
         })
+
+        if (!trackImageResponse.ok) {
+          throw new Error("Image upload failed")
+        }
+
         const trackImageData = await trackImageResponse.json()
         
         const data: Song = {
@@ -72,32 +97,30 @@ export default function UploadForm({ type }: {type?: "update" | null}) {
           name: form.name.value.trim(),
           artist: form.artist.value.trim(),
           featurings: form.featurings.value.trim(),
-          userId: session?.user.id as string,
-          imageUrl: trackImageData.url ?? "",
-          trackUrl: trackData.url
+          userid: session?.user.id as string,
+          imageurl: trackImageData.url ?? "",
+          trackurl: trackData.url
         }
 
         const dbResult = await saveTrack(data)
         if (dbResult) {
           toast({
             title: "Track Successfully Uploaded",
-            description: "...",
+            description: "Track has been uploaded successfully",
           })
           formRef.current?.reset()
+          setImage(undefined)
+          setAudioFile(undefined)
         }
 
       } else {
-        toast({
-          title: "Upload Error",
-          description: "...",
-          variant: "destructive"
-        })
+        throw new Error("Audio upload failed")
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast({
         title: "Upload Error",
-        description: "An unexpected error occurred",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
         variant: "destructive"
       })
     } finally {
@@ -108,24 +131,17 @@ export default function UploadForm({ type }: {type?: "update" | null}) {
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      formData.append("song", file)
+      setAudioFile(file)
     }
   }
-  const handleTrackImage = (e: any) => {
-    const file = e.target.files[0]
-    console.log(file)
+
+  const handleTrackImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
-      formData.append("image", file)
       const url = URL.createObjectURL(file)
       setImage({url, file})
     }
-  };
-
-  useEffect(() => {
-    if (imagePreviewRef.current) {
-      imagePreviewRef.current.src = image?.url!
-    }
-  }, [imagePreviewRef.current, image?.url])
+  }
 
   return (
     <form className="flex flex-col gap-5" ref={formRef} onSubmit={handleFormSubmit}>
@@ -144,11 +160,18 @@ export default function UploadForm({ type }: {type?: "update" | null}) {
           className="flex justify-center items-center w-[200px] h-[200px] rounded-md border border-dashed bg-white bg-opacity-5 border-white border-opacity-20 hover:border-white cursor-pointer"
         >
           <div className="flex flex-col items-center gap-5">
-            <img ref={imagePreviewRef} className={`${!image?.url? "hidden" : "block"} w-full h-full object-cover rounded-md`} />
-            <div className={`${!image?.url ? "flex flex-col items-center gap-4" : "hidden"}`}>
-              <Music4 className="w-10 h-10" />
-              <p className="font-bold">Upload Track Image</p>
-            </div>
+            {image?.url ? (
+              <img 
+                src={image.url}
+                className="w-full h-full object-cover rounded-md"
+                alt="Track preview" 
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-4">
+                <Music4 className="w-10 h-10" />
+                <p className="font-bold">Upload Track Image</p>
+              </div>
+            )}
           </div>
         </label>
         <div className="flex flex-1 flex-col gap-4 justify-end">
