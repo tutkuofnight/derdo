@@ -6,5 +6,7 @@ export const UploadFormSchema: z.ZodSchema<Song> = z.object({
   name: z.string(),
   artist: z.string(),
   featurings: z.string(),
-  userId: z.string()
+  userid: z.string(),
+  trackurl: z.string(),
+  imageurl: z.string(),
 })
