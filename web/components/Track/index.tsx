@@ -1,10 +1,26 @@
 "use client"
 import { Song } from "@/types"
-import { Play, Pause, Repeat, Repeat1 } from "lucide-react"
+import { Play, Pause, Repeat, Repeat1, Ellipsis } from "lucide-react"
 import { currentPlaying, playerState } from "@/store"
 import { useAtom } from "jotai"
 import { useState, useEffect } from "react"
 import TrackImage from "../controllers/TrackImage"
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 export const Info = ({ song, insideCard = false }: { song: Song, insideCard?: boolean }) => {
   const { activeTrack } = useActiveTrack(song.id)
@@ -50,7 +66,7 @@ export const Card = ({ song }: { song: Song }) => {
           <Info song={song} insideCard={true} />
         </div>
       </button>
-      <div>
+      <div className="flex items-center">
         <div className={`${activeTrack ? 'flex items-center sm:hidden': 'hidden'}`}>
           {audioPlayerState?.repeat ? (
             <button onClick={handleRepeat}>
@@ -62,6 +78,36 @@ export const Card = ({ song }: { song: Song }) => {
             </button>
           )}
         </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="w-[20px]">
+              <Ellipsis className="text-black dark:text-white" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Song Options</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+                <DropdownMenuSubTrigger>Move to</DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem>Email</DropdownMenuItem>
+                    <DropdownMenuItem>Message</DropdownMenuItem>
+                    <DropdownMenuItem>More...</DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                Update Info
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">
+                Delete Track
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )

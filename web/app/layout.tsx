@@ -69,7 +69,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               defaultTheme="system"
               enableSystem
               disableTransitionOnChange>
-              <Header />
+
               {children}
               <Toaster />
             </ThemeProvider>
