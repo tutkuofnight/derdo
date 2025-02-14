@@ -1,6 +1,8 @@
-import Auth from "@/components/Auth"
-import { AudioLines, Disc3, Music4, ListMusic, FileMusic, User, MoveRight, MoveLeft } from "lucide-react"
+import { AudioLines, Disc3, ListMusic, FileMusic, User, MoveRight, MoveLeft } from "lucide-react"
 
+import Auth from "@/components/Auth"
+import Header from "@/components/Header"
+import Logo from "@/components/Logo"
 
 const featuresData: any[] = [
   {
@@ -34,6 +36,10 @@ const featuresData: any[] = [
 export default function Home() {
   return (
     <main>
+      <div className="flex items-center justify-between">
+        <Logo />
+        <Header />
+      </div>
       <section className="h-[300px] lg:h-[400px] flex justify-between relative">
         <div className="flex flex-col h-full justify-center gap-4">
           <h1 className="text-3xl lg:text-5xl font-normal flex items-center gap-2 lg:gap-6"> 

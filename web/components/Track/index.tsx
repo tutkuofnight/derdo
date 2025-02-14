@@ -1,10 +1,10 @@
 "use client"
-import { Song } from "@/types"
+import { Playlist, Song } from "@/types"
 import { Play, Pause, Repeat, Repeat1, Ellipsis } from "lucide-react"
-import { currentPlaying, playerState } from "@/store"
-import { useAtom } from "jotai"
+import { currentPlaying, playerState, playlistStore, useAtom } from "@/store"
 import { useState, useEffect } from "react"
 import TrackImage from "../controllers/TrackImage"
+import { moveTrackAnotherPlaylist, deleteTrack } from "@/app/actions"
 
 import {
   DropdownMenu,
@@ -43,6 +43,7 @@ export const Card = ({ song }: { song: Song }) => {
   const { activeTrack } = useActiveTrack(song.id)
   const [audioPlayerState,setAudioPlayerState] = useAtom(playerState)
   const [currentTrack,setCurrentTrack] = useAtom(currentPlaying)
+  const [playlists,] = useAtom(playlistStore)
   const activeCard = activeTrack ? "bg-black dark:bg-gray-100 *:text-white rounded-md hover:bg-gray-800 hover:dark:bg-opacity-80" : "bg-transparent *:text-black"
 
   const handleCardClick = (song: Song) => {
@@ -55,6 +56,9 @@ export const Card = ({ song }: { song: Song }) => {
 
   const handleRepeat = () => {
     setAudioPlayerState({ ...audioPlayerState, repeat: !audioPlayerState?.repeat })
+  }
+  const handleDeleteTrack = async (id: string) => {
+    await deleteTrack(id)
   }
 
   return (
@@ -81,7 +85,7 @@ export const Card = ({ song }: { song: Song }) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="w-[20px]">
-              <Ellipsis className="text-black dark:text-white" />
+              <Ellipsis className={`text-black dark:text-white ${activeTrack ? "text-white dark:text-black": null}`} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -91,9 +95,11 @@ export const Card = ({ song }: { song: Song }) => {
                 <DropdownMenuSubTrigger>Move to</DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem>Email</DropdownMenuItem>
-                    <DropdownMenuItem>Message</DropdownMenuItem>
-                    <DropdownMenuItem>More...</DropdownMenuItem>
+                    {playlists && playlists.length > 0 ? (
+                      playlists.map((item: Playlist, index: number) => (
+                        <DropdownMenuItem onClick={() => moveTrackAnotherPlaylist(song.id, item.id)} key={index}>{item.name}</DropdownMenuItem>
+                      ))
+                    ): <small className="p-1">No playlist found...</small>}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
@@ -102,7 +108,7 @@ export const Card = ({ song }: { song: Song }) => {
               <DropdownMenuItem>
                 Update Info
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
+              <DropdownMenuItem className="text-red-600" onClick={() => handleDeleteTrack(song.id)}>
                 Delete Track
               </DropdownMenuItem>
             </DropdownMenuGroup>

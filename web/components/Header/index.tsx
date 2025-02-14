@@ -66,7 +66,7 @@ export default function Header() {
   return (
     <>
       { !pathname.includes("/join") && (
-        <header className="flex items-center justify-end w-full pb-4">
+        <header className="flex items-center justify-end w-full">
           <div className="flex items-center gap-3">
             { headerButtons() }
           </div>

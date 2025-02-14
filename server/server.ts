@@ -33,7 +33,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
-import { trackUpload, trackImageUpload } from "./config/multer"
+import { trackUpload, trackImageUpload, playlistImageUpload } from "./config/multer"
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
@@ -66,6 +66,20 @@ app.post("/track/upload/:id", trackUpload.single("song"), (req: Request, res: Re
 })
 
 app.post("/track/upload/image/:id", trackImageUpload.single("image"), (req: Request, res: Response) => {
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No image file uploaded"
+    })
+  }
+  
+  return res.status(200).json({
+    success: true,
+    url: req.body.imageUrl
+  })
+})
+
+app.post("/playlist/upload/image/:id", playlistImageUpload.single("image"), (req: Request, res: Response) => {
   if (!req.file) {
     return res.status(400).json({
       success: false,

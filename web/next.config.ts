@@ -13,7 +13,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
         port: ""
-      }
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost:3001',
+        port: '',
+        pathname: '/uploads/',
+        search: '',
+      },
     ]
   },
   reactStrictMode: false,

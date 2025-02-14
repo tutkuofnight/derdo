@@ -8,11 +8,11 @@ import AppLayout from "@/layouts/app-layout"
 
 export default async function () {
   const cookie = await cookies()
-  // const id: any = cookie.get("uid")
-  const { rows: songs } = await db.query(`SELECT id, name, artist, featurings, userid, imageurl, trackurl FROM songs`)
-
+  const id: any = cookie.get("uid")
+  const { rows: songs } = await db.query(`SELECT id, name, artist, featurings, userid, imageurl, trackurl FROM songs WHERE userid = $1`, [id.value])
+  const { rows: playlists } = await db.query(`SELECT * FROM playlist WHERE userid = $1`, [id.value])
   return (
-    <AppLayout>
+    <AppLayout playlists={playlists}>
       <SayWelcome />
       <Playlist playlist={songs} />
       <AudioPlayerDefault />
