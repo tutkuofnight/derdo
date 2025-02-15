@@ -50,11 +50,14 @@ export default function Playlist({ playlist, className, playlistName }: { playli
           { listenerUsers.length > 0 && <Listeners listeners={listenerUsers} /> }
       </div>
       <div>
-        {playlist.map((song: Song, index: number) => (
-          <Card song={song} key={index} />
-        ))}
+        {
+          playlist && playlist.length > 0 ? 
+            playlist.map((song: Song, index: number) => (
+              <Card song={song} key={index} />
+            )) : 
+          <p>You don't have any uploaded songs your playlist. Please upload before </p>
+        }
       </div>
-      { !playlist && <p>You don't have any uploaded songs your playlist. Please upload before </p> }
     </section>
   );
 }

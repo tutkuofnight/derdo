@@ -3,8 +3,8 @@ import { Playlist, Song } from "@/types"
 import { Play, Pause, Repeat, Repeat1, Ellipsis } from "lucide-react"
 import { currentPlaying, playerState, playlistStore, useAtom } from "@/store"
 import { useState, useEffect } from "react"
-import TrackImage from "../controllers/TrackImage"
-import { moveTrackAnotherPlaylist, deleteTrack } from "@/app/actions"
+import ImageController from "../controllers/Image"
+import { moveTrackAnotherPlaylist, deleteTrack } from "@/services/tracks"
 
 import {
   DropdownMenu,
@@ -66,7 +66,7 @@ export const Card = ({ song }: { song: Song }) => {
       <button className="flex items-center gap-4" onClick={() => handleCardClick(song)}>
         { activeTrack && audioPlayerState?.isPlaying ? <Pause className={activeTrack ? "text-white dark:text-black" : "text-black dark:text-white"} /> : <Play className={activeTrack ? "text-white dark:text-black" : "text-black dark:text-white"} /> }
         <div className="flex items-center gap-2">
-          <TrackImage url={song.imageurl} className="w-[40px] h-[40px]" />
+          <ImageController type="track" url={song.imageurl} className="w-[40px] h-[40px]" iconSize="w-[20px] h-[20px]" />
           <Info song={song} insideCard={true} />
         </div>
       </button>

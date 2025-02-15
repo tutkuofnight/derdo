@@ -1,0 +1,52 @@
+"use server"
+
+import db from "@/config/db"
+import { Song } from "@/types"
+
+export const saveTrack = async (data: Song) => {
+  return await db.query(`INSERT INTO songs (id, name, artist, featurings, userid, imageurl, trackurl, playlistid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`, [
+    data.id,
+    data.name,
+    data.artist,
+    data.featurings,
+    data.userid,
+    data.imageurl,
+    data.trackurl,
+    data.playlistid
+  ])
+}
+
+export const getTrack = async (trackId: string) => {
+  const { rows } = await db.query(`SELECT id, name, artist, featurings, imageurl, trackurl FROM songs WHERE id = $1`, [trackId])
+  return rows
+}
+
+export const getUserUploadedTracks = async (userId: string) => {
+  const { rows } = await db.query(`SELECT id, name, artist, featurings, imageurl, trackurl FROM songs WHERE userid = $1`, [userId])
+  return rows
+}
+
+export const getPlaylistTracks = async (playlistId: string) => {
+  const { rows } = await db.query(`SELECT id, name, artist, featurings, imageurl, trackurl FROM songs WHERE playlistid = $1`, [playlistId])
+  return rows
+}
+
+export const moveTrackAnotherPlaylist = async (trackId: string, playlistId: string) => {
+  return await db.query(`UPDATE songs SET playlistid = $1 WHERE id = $2`, [playlistId, trackId])
+}
+
+export const updateTrack = async (trackId: string, data: Song) => {
+  let keys: string[] = []
+  let values: string[] = []
+  let lastIndex: number = Object.keys(data).length + 1
+
+  Object.entries(data).forEach((item, index) => {
+    keys.push(`${item[0]} = $${index + 1}`)
+    values.push(item[1])
+  })
+  return await db.query(`UPDATE songs SET ${keys.join(",")} WHERE id = $${lastIndex}`, [...values, trackId])
+}
+
+export const deleteTrack = async (trackId: string) => {
+  return await db.query(`DELETE FROM songs WHERE id = $1`, [trackId])
+}

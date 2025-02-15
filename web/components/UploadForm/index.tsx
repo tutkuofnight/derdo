@@ -16,7 +16,7 @@ import {
 
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
-import { saveTrack } from "@/app/actions"
+import { saveTrack } from "@/services/tracks"
 import { Music4 } from "lucide-react"
 import { v4 } from "uuid"
 import { Playlist, Song } from "@/types"
