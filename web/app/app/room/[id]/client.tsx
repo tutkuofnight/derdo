@@ -2,8 +2,7 @@
 import { useSession } from "next-auth/react"
 import useSocket from "@/hooks/useSocket"
 import { useEffect } from "react"
-import { useAtom } from "jotai"
-import { roomId as roomIdStore, listeners } from "@/store"
+import { roomId as roomIdStore, listeners, useAtom } from "@/store"
 
 import Playlist from "@/components/Playlist"
 import { ListenerUser } from "@/types"

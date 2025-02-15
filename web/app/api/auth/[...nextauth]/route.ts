@@ -16,7 +16,7 @@ const handler = NextAuth({
     async session({ session, token }): Promise<any> {
       const user: User | any = (await db.query(`SELECT * FROM users WHERE id = $1`, [token.sub])).rows[0]
       session.user = user
-      await setCookie(user.id)
+      await setCookie("uid", user.id)
       return session
     },
     async jwt({ token, account, profile }) {

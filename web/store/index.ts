@@ -1,14 +1,21 @@
-import { atom } from "jotai"
-import { ListenerUser, PlayerState, Song } from "@/types"
+import { atom, useAtom } from "jotai"
+import { ListenerUser, PlayerState, Song, Playlist } from "@/types"
 
-export const playerState = atom<PlayerState | null>(null)
+const playerState = atom<PlayerState | null>(null)
+const currentPlaying = atom<Song | null>(null)
+const search = atom<string>("")
+const roomId = atom<string | null>(null)
+const tracks = atom<Song[]>([])
+const listeners = atom<ListenerUser[]>([])
+const playlistStore = atom<Playlist[]>([])
 
-export const currentPlaying = atom<Song | null>(null)
-
-export const search = atom<string>("")
-
-export const roomId = atom<string | null>(null)
-
-export const tracks = atom<Song[]>([])
-
-export const listeners = atom<ListenerUser[]>([])
+export {
+  playerState,
+  currentPlaying,
+  search,
+  roomId,
+  tracks,
+  listeners,
+  playlistStore,
+  useAtom
+}
