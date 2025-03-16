@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google"
 import db from "@/config/db"
 import { ExtendedProfile, User } from "@/types"
 import { setCookie } from "@/app/actions"
+import ProfileImageResizer from "@/utils/profile-image-resizer"
 
 const handler = NextAuth({
   providers: [
@@ -11,11 +12,14 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }): Promise<any> {
       const user: User | any = (await db.query(`SELECT * FROM users WHERE id = $1`, [token.sub])).rows[0]
       session.user = user
+      session.user.image = await ProfileImageResizer(session.user.image!)
+
       await setCookie("uid", user.id)
       return session
     },

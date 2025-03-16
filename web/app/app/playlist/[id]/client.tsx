@@ -2,39 +2,35 @@
 import { Playlist, Song } from "@/types"
 import { playlistStore, useAtom } from "@/store"
 import { useEffect, useState } from "react"
-import PlaylistComponent from "@/components/Playlist"
-import ImageController from "@/components/controllers/Image"
+import Tracklist from "@/components/Tracklist"
+import PlaylistView from "@/components/PlaylistView"
+import { useParams } from "next/navigation"
 
-export default function PlaylistPageClient({ tracks, playlist }: { tracks: Song[], playlist: Playlist }){
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+export default function PlaylistPageClient({ playlistTracks }: { playlistTracks: Song[] }){
+  const params = useParams()
   const [playlists,] = useAtom(playlistStore)
+  
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [activePlaylist, setActivePlaylist] = useState<Playlist>()
 
   useEffect(() => {
-    const findedPlaylist = playlists.find((item: Playlist) => item.id == playlist?.id)
+    const findedPlaylist = playlists.find((item: Playlist) => item.id == params?.id)
     if (!findedPlaylist) {
       // return alert("playlist not found :(")
+      return
     }
+    setActivePlaylist(findedPlaylist)
     setIsLoading(false)
   }, [])
 
   return (
     <>
       {!isLoading ? (
-        <div className="">
-          <div className="flex items-end gap-5 mb-5">
-            <div>
-              <ImageController url={playlist.image} type="playlist" className="w-[200px] h-[200px]" iconSize="w-[60px] h-[60px]" />
-            </div>
-            <div className="mb-3">
-              <small className="bg-black text-white dark:bg-white dark:text-black rounded-lg py-1 px-2 inline text-xs font-semibold">Playlist</small>
-              <h1 className="text-3xl font-bold my-2">{playlist?.name}</h1>
-              <p>{playlist.description}</p>
-            </div>
-          </div>
-          <PlaylistComponent playlist={tracks} />
+        <div>
+          <PlaylistView playlist={activePlaylist!} />
+          <Tracklist playlist={playlistTracks} />
         </div>
       ) : <p>Loading...</p>}
-
     </>
   )
 }

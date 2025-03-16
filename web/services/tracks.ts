@@ -3,6 +3,23 @@
 import db from "@/config/db"
 import { Song } from "@/types"
 
+export const createTrackTable = async () => {
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS songs (
+      id UUID PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      artist VARCHAR(255) NOT NULL,
+      featurings TEXT,
+      userid UUID NOT NULL,
+      imageurl TEXT,
+      trackurl TEXT,
+      playlistid UUID,
+      FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (playlistid) REFERENCES playlists(id) ON DELETE CASCADE
+    )
+  `)
+}
+
 export const saveTrack = async (data: Song) => {
   return await db.query(`INSERT INTO songs (id, name, artist, featurings, userid, imageurl, trackurl, playlistid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`, [
     data.id,

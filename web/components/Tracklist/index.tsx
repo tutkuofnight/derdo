@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Song } from "@/types"
 import { useEffect } from "react"
 
-export default function Playlist({ playlist, className, playlistName }: { playlist: any[], className?: string, playlistName?: string }) {
+export default function Tracklist({ playlist, className, playlistName }: { playlist: any[], className?: string, playlistName?: string }) {
   const [,setTracklist] = useAtom(tracks)
   const [listenerUsers,] = useAtom(listeners)
   const [currentTrack,] = useAtom(currentPlaying)
@@ -42,7 +42,7 @@ export default function Playlist({ playlist, className, playlistName }: { playli
   return (
     <section className={className}>
       <div className="flex items-center justify-between">
-        <h1 className="text-sm font-bold my-3 p-1 px-2 bg-black text-white dark:bg-gray-100 dark:text-black inline-block rounded-lg">{playlistName ? playlistName : "Your All Tracks"}</h1>
+        <h1 className="text-sm font-bold my-3 p-1 px-2 bg-black text-white dark:bg-gray-100 dark:text-black inline-block rounded-md">{playlistName ? playlistName : "Your All Tracks"}</h1>
           { !pathname.includes("room") && playlist.length > 0 ? <Button variant={"outline"} onClick={handleCreateRoom}>
             Create Room
             <DoorOpen />

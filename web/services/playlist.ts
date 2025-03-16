@@ -3,6 +3,19 @@
 import db from "@/config/db"
 import { Playlist } from "@/types"
 
+export const createPlaylistTable = async () => {
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS playlists (
+      id UUID PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      description TEXT,
+      image TEXT,
+      userId UUID NOT NULL,
+      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `)
+}
+
 export const createPlaylist = async (userId: string, data: Playlist): Promise<boolean> => {
   await db.query(`INSERT INTO playlist (id, name, description, image, userId) VALUES ($1, $2, $3, $4, $5)`, [
     data.id,
@@ -20,8 +33,8 @@ export const getUserPlaylists = async (userId: string) => {
   return rows
 }
 
-export const getPlaylist = async (playlistId: string) => {
-  const { rows } = await db.query(`SELECT * FROM playlist WHERE id = $1`, [playlistId])
+export const getPlaylist = async (playlistId: string, userId: string) => {
+  const { rows } = await db.query(`SELECT * FROM playlist WHERE id = $1 AND userid = $2`, [playlistId, userId])
   return rows
 }
 
@@ -34,7 +47,8 @@ export const updatePlaylist = async (playlistId: string, data: Playlist) => {
     keys.push(`${item[0]} = $${index + 1}`)
     values.push(item[1])
   })
-  return await db.query(`UPDATE playlist SET ${keys.join(",")} WHERE id = $${lastIndex}`, [...values, playlistId])
+  const { fields } = await db.query(`UPDATE playlist SET ${keys.join(",")} WHERE id = $${lastIndex}`, [...values, playlistId])
+  return fields
 }
 
 export const removePlaylist = async (playlistId: string) => {

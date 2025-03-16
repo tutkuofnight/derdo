@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   },
   
   images: {
+    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: "https",
@@ -17,9 +18,9 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'http',
-        hostname: 'localhost:3001',
-        port: '',
-        pathname: '/uploads/',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/uploads/**',
         search: '',
       },
     ]

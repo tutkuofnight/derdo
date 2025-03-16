@@ -1,5 +1,5 @@
 "use client"
-import OnlineAudioPlayer from "@/components/AudioPlayer"
+// import OnlineAudioPlayer from "@/components/AudioPlayer"
 import DefaultAudioPlayer from "@/components/AudioPlayer/default"
 
 import Header from "@/components/Header"
@@ -11,19 +11,23 @@ import {
 import Sidebar from "@/components/Sidebar"
 import { Playlist } from "@/types"
 import { playlistStore, useAtom } from "@/store"
-// import useSocket from "@/hooks/useSocket"
+import { useMemo, useEffect } from "react"
 
 export default function({ playlists, children }: { playlists?: Playlist[], children: React.ReactNode }){
-  const [playlist, setPlaylist] = useAtom(playlistStore)
+  const [ playlist, setPlaylist ] = useAtom(playlistStore)
 
   if (playlists && playlists.length > 0) {
     setPlaylist(playlists)
   }
-  
+
+  const memoizedSidebar = useMemo(() => {
+    return <Sidebar />
+  }, [playlist])
+
   return (
     <ResizablePanelGroup direction="horizontal" className="overflow-y-hidden lg:max-w-[1366px] lg:mx-auto">
       <ResizablePanel defaultSize={20} minSize={20} maxSize={30} style={{ padding: "20px" }}>
-        <Sidebar playlists={playlist} />
+        {memoizedSidebar}
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={75} style={{ padding: "20px" }}>

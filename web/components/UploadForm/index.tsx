@@ -23,8 +23,6 @@ import { Playlist, Song } from "@/types"
 import { UpdateSongFormDto } from "@/types/dto"
 import { playlistStore, useAtom } from "@/store"
 
-const inputStyles = "font-bold outline-none bg-transparent py-2"
-
 export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDto }) {
   const formRef = useRef<HTMLFormElement>(null)
   const [image, setImage] = useState<{ url: string, file: File }>()
@@ -194,10 +192,10 @@ export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDt
           </div>
         </label>
         <div className="flex flex-1 flex-col gap-4 justify-end">
-          <input type="text" name="name" placeholder="Track Name.." required className={`text-3xl ${inputStyles}`} />
+          <input type="text" name="name" placeholder="Track Name.." required className={`text-3xl form-input`} />
           <div className="flex gap-3">
-            <input type="text" name="artist" placeholder="Track Artist.." required className={inputStyles} />
-            <input type="text" name="featurings" placeholder="Featurings..." className={inputStyles} />
+            <input type="text" name="artist" placeholder="Track Artist.." required className={`form-input`} />
+            <input type="text" name="featurings" placeholder="Featurings..." className={`form-input`} />
           </div>
         </div>
       </div>

@@ -1,10 +1,9 @@
 "use client"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
 import { ArrowRight, CloudUpload } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +18,7 @@ import ThemeSwithcer from "@/components/ThemeSwitcher"
 export default function Header() {
   const { data:session, status } = useSession()
   const pathname = usePathname()
+  const { push } = useRouter()
 
   const headerButtons = () => {
     if (status == "authenticated" && pathname == "/") {
@@ -48,7 +48,7 @@ export default function Header() {
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => push("/app/profile")}>Profile</DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

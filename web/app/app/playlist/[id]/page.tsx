@@ -15,6 +15,6 @@ export default async function PlaylistPage({ params }: { params: Promise<{ id: s
   const playlist: Playlist[] = await getUserPlaylists(uid.value)
 
   return <AppLayout playlists={playlist}>
-    <Client tracks={playlistTracks} playlist={playlist[0]} />
+    <Client playlistTracks={playlistTracks} />
   </AppLayout>
 }

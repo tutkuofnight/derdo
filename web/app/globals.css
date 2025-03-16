@@ -116,3 +116,9 @@ main {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .form-input {
+    @apply w-full font-bold outline-none bg-transparent py-2
+  }
+}

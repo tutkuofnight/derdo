@@ -84,8 +84,8 @@ export const Card = ({ song }: { song: Song }) => {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-[20px]">
-              <Ellipsis className={`text-black dark:text-white ${activeTrack ? "text-white dark:text-black": null}`} />
+            <Button variant="link" className="w-[20px]">
+              <Ellipsis className={`${activeTrack ? "text-black dark:text-black": "text-black dark:text-white"}`} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">

@@ -1,6 +1,5 @@
 import SayWelcome from "@/components/SayWelcome"
-import PlaylistComponent from "@/components/Playlist"
-import AudioPlayerDefault from "@/components/AudioPlayer/default"
+import PlaylistComponent from "@/components/Tracklist"
 import AppLayout from "@/layouts/app-layout"
 
 import { Playlist, Song } from "@/types"
@@ -20,7 +19,6 @@ export default async function () {
     <AppLayout playlists={playlists}>
       <SayWelcome />
       <PlaylistComponent playlist={tracks} />
-      <AudioPlayerDefault />
     </AppLayout>
   )
 }

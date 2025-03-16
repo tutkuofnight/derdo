@@ -1,18 +1,16 @@
 "use client"
 import { useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
+import ImageUpload from "@/components/ImageUpload"
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import { createPlaylist } from "@/services/playlist"
-import { ListMusic } from "lucide-react"
 import { v4 } from "uuid"
 import { Playlist } from "@/types"
 
-const inputStyles = "w-full font-bold outline-none bg-transparent py-2"
-
 export default function UploadForm() {
   const formRef = useRef<HTMLFormElement>(null)
-  const [image, setImage] = useState<{ url: string, file: File }>()
+  const [image, setImage] = useState<File>()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
   const { data:session } = useSession()
@@ -31,7 +29,7 @@ export default function UploadForm() {
       // Image dosyası için FormData
       const imageFormData = new FormData()
       if (image) {
-        imageFormData.append("image", image.file)
+        imageFormData.append("image", image)
       }
       
       const res = await fetch(`${process.env.NEXT_PUBLIC_CS_URL}playlist/upload/image/${dataId}`, {
@@ -40,7 +38,10 @@ export default function UploadForm() {
       })
 
       if (!res.ok) {
-        throw new Error("Image upload failed")
+        return toast({
+          title: `Playlist Artwork Upload Error`,
+          description: "...",
+        })
       }
       const playlistImage = await res.json()
         
@@ -73,48 +74,14 @@ export default function UploadForm() {
     }
   }
 
-  const handleTrackImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const url = URL.createObjectURL(file)
-      setImage({url, file})
-    }
-  }
-
   return (
     <div className="w-full">
       <form className="flex flex-col gap-5" ref={formRef} onSubmit={handleFormSubmit}>
         <div className="flex flex-col md:flex-row justify-center gap-5">
-          <input 
-            type="file"
-            id="image"
-            name="image"
-            className="hidden"
-            onChange={handleTrackImage}
-            accept="image/jpeg,image/jpg,image/png,image/gif"
-          />
-          <label 
-            htmlFor="image" 
-            className="flex justify-center items-center w-[200px] h-[200px] rounded-md border border-dashed bg-white bg-opacity-5 border-white border-opacity-20 hover:border-white cursor-pointer"
-          >
-            <div className="flex flex-col items-center gap-5">
-              {image?.url ? (
-                <img 
-                  src={image.url}
-                  className="w-full h-full object-cover rounded-md"
-                  alt="Track preview" 
-                />
-              ) : (
-                <div className="flex flex-col items-center gap-4">
-                  <ListMusic className="w-10 h-10" />
-                  <p className="font-bold">Select Playlist Image</p>
-                </div>
-              )}
-            </div>
-          </label>
+          <ImageUpload changeImage={(file: File) => setImage(file)} />
           <div className="flex flex-1 flex-col gap-4">
-            <input type="text" name="name" placeholder="Playlist Name.." required className={`text-xl ${inputStyles}`} />
-            <textarea name="description" placeholder="Description..." className={`h-full ${inputStyles}`} />
+            <input type="text" name="name" placeholder="Playlist Name.." required className={`text-xl form-input`} />
+            <textarea name="description" placeholder="Description..." className={`h-full form-input`} />
           </div>
         </div>
         <Button type="submit" disabled={isSubmitting} className="w-full">

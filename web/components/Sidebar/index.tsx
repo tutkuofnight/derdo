@@ -12,18 +12,28 @@ import { Plus, LibraryBig } from "lucide-react"
 import { Playlist } from "@/types"
 import PlaylistCard from "../PlaylistCard"
 import Link from "next/link"
-export default function Sidebar({ playlists }: { playlists: Playlist[] }){
+import { playlistStore, useAtom } from "@/store"
+import { useMemo } from "react"
+
+export default function Sidebar(){
+  const [ playlists, ] = useAtom(playlistStore)
+  console.log(playlists, playlistStore)
+  
+  const renderingPlaylists = useMemo(() => {
+    return playlists
+  }, [playlists])
+
   return (
     <div className="h-screen">
       <Logo />
       <div className="mt-4">
-        <h1 className="inline-flex items-center gap-2 text-sm font-bold my-3 p-1 px-2 bg-black text-white dark:bg-gray-100 dark:text-black rounded-lg">
+        <h1 className="inline-flex items-center gap-2 text-sm font-bold my-3 p-1 px-2 bg-black text-white dark:bg-gray-100 dark:text-black rounded-md">
           <LibraryBig className="w-[20px] h-[20px]" />
           {"Library"}
         </h1>
         <Dialog>
-          <DialogTrigger className="w-full">
-            <Button variant={"secondary"} className="rounded-xl w-full">
+          <DialogTrigger className="w-full" asChild={true}>
+            <Button variant={"secondary"} className="w-full">
               <Plus></Plus>
               Create Playlist
             </Button>
@@ -35,7 +45,7 @@ export default function Sidebar({ playlists }: { playlists: Playlist[] }){
         </Dialog>
         <div className="mt-3">
           {
-            playlists ? playlists.map((playlist: Playlist, index: number) => (
+            renderingPlaylists ? renderingPlaylists.map((playlist: Playlist, index: number) => (
               <Link href={`/app/playlist/${playlist.id}`} key={index}>
                 <PlaylistCard playlist={playlist} />
               </Link>

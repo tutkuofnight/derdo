@@ -7,7 +7,7 @@ import ImageController from "@/components/controllers/Image"
 export default function PlaylistCard({ playlist }: { playlist: Playlist }){
   const params = useParams()
   console.log(`params: ` + params.id)
-  const playlistCardStyles = "rounded-lg p-2 flex items-center gap-4 cursor-pointer hover:bg-white hover:bg-opacity-10 group"
+  const playlistCardStyles = "rounded-md p-2 flex items-center gap-4 cursor-pointer hover:bg-white hover:bg-opacity-10 group"
   return (
     <div className={`${playlistCardStyles} ${playlist.id == params.id ? "bg-white text-black hover:bg-opacity-100" : null}`}>
       <div>

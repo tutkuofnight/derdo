@@ -20,7 +20,8 @@ const createUploadDirs = () => {
   const dirs = [
     path.join(__dirname, "../public/uploads/track"),
     path.join(__dirname, "../public/uploads/track/image"),
-    path.join(__dirname, "../public/uploads/playlist/image")
+    path.join(__dirname, "../public/uploads/playlist/image"),
+    path.join(__dirname, "../public/uploads/user/image"),
   ]
   
   dirs.forEach(dir => {
@@ -102,24 +103,30 @@ const playlistImageStorage: StorageEngine = multer.diskStorage({
 })
 
 
-// const userImageStorage:StorageEngine = multer.diskStorage({
-//   destination: (req: Request, file: any, cb: any) => {
-//     console.log(req.body)
-//     cb(null, path.join(__dirname, "../public/uploads/user/image"))
-//   },
-//   filename: (req: Request, file: any, cb: any) => {
-//     let fileName = file.originalname.split(" ").join("-")
+const userImageStorage:StorageEngine = multer.diskStorage({
+  destination: (req: Request, file: any, cb: any) => {
+    const uploadPath = path.join(__dirname, "../public/uploads/user/image/")
+    // Klasörün varlığını kontrol et
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true })
+    }
+    cb(null, uploadPath)
+  },
+  filename: (req: Request, file: any, cb: any) => {
+    const { fileType } = fileInfo(file)
+    let fileName: string
 
-//     if (fileName.endsWith(".mp3")) {
-//       fileName = `${id}.mp3`
-//     }
+    if (!acceptImageFile.includes(fileType!)) {
+      return cb(new Error('Invalid file type'))
+    }
 
-//     req.body.id = id
-//     cb(null, fileName)
-//   },
-// })
-// export const userImageUpload = multer({ storage: userImageStorage })
+    fileName = `${req.params.id}.${fileType}`
+    req.body.imageUrl = `${getFullDomain(req)}/user/image/${fileName}`
+    cb(null, fileName)
+  },
+})
 
+export const userImageUpload = multer({ storage: userImageStorage })
 export const trackUpload = multer({ storage: trackStorage })
 export const trackImageUpload = multer({ storage: trackImageStorage })
 export const playlistImageUpload = multer({ storage: playlistImageStorage })

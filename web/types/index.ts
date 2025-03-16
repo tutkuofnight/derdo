@@ -6,7 +6,7 @@ export type UploadForm = {
     featurings: string
     song: File
 }
-export type Song = {
+export type Song = { 
     id: string
     name: string
     artist: string
