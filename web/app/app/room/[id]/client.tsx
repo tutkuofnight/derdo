@@ -2,10 +2,9 @@
 import { useSession } from "next-auth/react"
 import useSocket from "@/hooks/useSocket"
 import { useEffect } from "react"
-import { useAtom } from "jotai"
-import { roomId as roomIdStore, listeners } from "@/store"
+import { roomId as roomIdStore, listeners, useAtom } from "@/store"
 
-import Playlist from "@/components/Playlist"
+import Playlist from "@/components/Tracklist"
 import { ListenerUser } from "@/types"
 
 export default function({ roomId, songs, playlistName }: { roomId: string, songs: any[], playlistName: string }) {

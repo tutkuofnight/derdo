@@ -1,12 +1,11 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
 import { getVolume, setVolume } from "./functions"
-import { useAtom } from "jotai"
-import { currentPlaying, tracks, playerState } from "@/store"
+import { currentPlaying, tracks, playerState, useAtom } from "@/store"
 import { Song } from "@/types"
 import { Play, Pause, SkipBack, SkipForward, Repeat, Repeat1 } from "lucide-react"
 import { Info } from "@/components/Track"
-import TrackImage from "../controllers/TrackImage"
+import ImageController from "../controllers/Image"
 import Volume from "./volume"
 import trackTime from "@/utils/track-time"
 
@@ -162,7 +161,7 @@ export default function () {
           <div className="flex flex-1 items-center justify-between px-5">
             <div className="sm:flex sm:items-center sm:gap-2 flex-1">
               <div className="flex items-center gap-2">
-                <TrackImage url={currentTrack.imageurl} className="w-9 h-9" />
+                <ImageController type="track" url={currentTrack.imageurl} className="w-9 h-9" />
                 <Info song={currentTrack} />
               </div>
               {audioRef.current?.duration && duration ?

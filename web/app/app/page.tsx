@@ -1,20 +1,24 @@
 import SayWelcome from "@/components/SayWelcome"
-import Playlist from "@/components/Playlist"
-import AudioPlayerDefault from "@/components/AudioPlayer/default"
-import db from "@/config/db"
-import { Song } from "@/types"
+import PlaylistComponent from "@/components/Tracklist"
+import AppLayout from "@/layouts/app-layout"
+
+import { Playlist, Song } from "@/types"
 import { cookies } from 'next/headers'
+
+import { getUserUploadedTracks } from "@/services/tracks"
+import { getUserPlaylists } from "@/services/playlist"
 
 export default async function () {
   const cookie = await cookies()
-  // const id: any = cookie.get("uid")
-  const { rows: songs } = await db.query(`SELECT id, name, artist, featurings, userid, imageurl, trackurl FROM songs`)
+  const id: any = cookie.get("uid")
+
+  const tracks: Song[] = await getUserUploadedTracks(id.value)
+  const playlists: Playlist[] = await getUserPlaylists(id.value)
 
   return (
-    <main>
+    <AppLayout playlists={playlists}>
       <SayWelcome />
-      <Playlist playlist={songs} />
-      <AudioPlayerDefault />
-    </main>
+      <PlaylistComponent playlist={tracks} />
+    </AppLayout>
   )
 }

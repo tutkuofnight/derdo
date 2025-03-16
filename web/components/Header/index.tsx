@@ -1,10 +1,9 @@
 "use client"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
-import { ArrowRight, AudioLines, CloudUpload } from "lucide-react"
+import { ArrowRight, CloudUpload } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +18,7 @@ import ThemeSwithcer from "@/components/ThemeSwitcher"
 export default function Header() {
   const { data:session, status } = useSession()
   const pathname = usePathname()
+  const { push } = useRouter()
 
   const headerButtons = () => {
     if (status == "authenticated" && pathname == "/") {
@@ -48,7 +48,7 @@ export default function Header() {
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => push("/app/profile")}>Profile</DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -66,18 +66,12 @@ export default function Header() {
   return (
     <>
       { !pathname.includes("/join") && (
-        <header className="flex items-center justify-between w-full p-4 lg:w-[1024px] lg:mx-auto">
-        <Link href={status == "authenticated" ? "/app" : "/"}>
-          <h1 className="text-2xl font-logo flex items-center gap-2 cursor-pointer">
-            derdo
-            <AudioLines className="w-6 h-6" />
-          </h1>
-        </Link>
-        <div className="flex items-center gap-3">
-          { headerButtons() }
-        </div>
-      </header>
-    )}
+        <header className="flex items-center justify-end w-full">
+          <div className="flex items-center gap-3">
+            { headerButtons() }
+          </div>
+        </header>
+      )}
     </>
   )
 }

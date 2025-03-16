@@ -5,7 +5,7 @@ import AppLayout from "@/layouts/app-layout"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }>}) {
   const { id } = await params
-  const { rows: result } = await db.query("SELECT name, image FROM users WHERE id = $1", [id])
+  const { rows: result } = await db.query("SELECT name FROM users WHERE id = $1", [id])
   return {
     title: `${result[0].name}'s Playlist | derdo`,
   }

@@ -7,13 +7,22 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '15mb',
     },
   },
+  
   images: {
+    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
         port: ""
-      }
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/uploads/**',
+        search: '',
+      },
     ]
   },
   reactStrictMode: false,

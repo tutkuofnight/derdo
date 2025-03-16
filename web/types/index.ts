@@ -6,7 +6,7 @@ export type UploadForm = {
     featurings: string
     song: File
 }
-export type Song = {
+export type Song = { 
     id: string
     name: string
     artist: string
@@ -15,6 +15,7 @@ export type Song = {
     userid: string
     imageurl?: string
     trackurl: string
+    playlistid?: string
 }
 export type PlayerState = {
     isPlaying?: boolean | null
@@ -26,7 +27,8 @@ export type PlayerState = {
 export type Playlist = {
     id: string
     name: string
-    songlist?: Song[]
+    description?: string
+    image?: string
 }
 
 export type UpdateUser = {

@@ -1,24 +1,36 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
-import { saveTrack } from "@/app/actions"
+import { saveTrack } from "@/services/tracks"
 import { Music4 } from "lucide-react"
 import { v4 } from "uuid"
-import { Song } from "@/types"
+import { Playlist, Song } from "@/types"
 import { UpdateSongFormDto } from "@/types/dto"
-
-const inputStyles = "font-bold outline-none bg-transparent py-2"
+import { playlistStore, useAtom } from "@/store"
 
 export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDto }) {
   const formRef = useRef<HTMLFormElement>(null)
-  const imagePreviewRef = useRef<HTMLImageElement>(null)
   const [image, setImage] = useState<{ url: string, file: File }>()
   const [audioFile, setAudioFile] = useState<File>()
+  const [selectPlaylist, setSelectPlaylist] = useState<string>()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [playlists,] = useAtom(playlistStore)
+
   const { toast } = useToast()
   const { data:session } = useSession()
 
@@ -99,7 +111,8 @@ export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDt
           featurings: form.featurings.value.trim(),
           userid: session?.user.id as string,
           imageurl: trackImageData.url ?? "",
-          trackurl: trackData.url
+          trackurl: trackData.url,
+          playlistid: selectPlaylist
         }
 
         const dbResult = await saveTrack(data)
@@ -143,6 +156,10 @@ export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDt
     }
   }
 
+  const handleSelectChange = (val: string) => {
+    setSelectPlaylist(val)
+  }
+
   return (
     <form className="flex flex-col gap-5" ref={formRef} onSubmit={handleFormSubmit}>
       <h1 className="text-3xl font-bold">Upload Track</h1>
@@ -175,13 +192,26 @@ export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDt
           </div>
         </label>
         <div className="flex flex-1 flex-col gap-4 justify-end">
-          <input type="text" name="name" placeholder="Track Name.." required className={`text-3xl ${inputStyles}`} />
+          <input type="text" name="name" placeholder="Track Name.." required className={`text-3xl form-input`} />
           <div className="flex gap-3">
-            <input type="text" name="artist" placeholder="Track Artist.." required className={inputStyles} />
-            <input type="text" name="featurings" placeholder="Featurings..." className={inputStyles} />
+            <input type="text" name="artist" placeholder="Track Artist.." required className={`form-input`} />
+            <input type="text" name="featurings" placeholder="Featurings..." className={`form-input`} />
           </div>
         </div>
       </div>
+      <Select onValueChange={handleSelectChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select a playlist" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Playlists</SelectLabel>
+            {playlists && playlists.length > 0 ? playlists.map((item: Playlist, index: number) => (
+              <SelectItem value={item.id} key={index}>{item.name}</SelectItem>
+            )) : <p>No playlist found...</p>}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
       <Label htmlFor="track">Choose track file</Label>
       <Input 
         id="track" 

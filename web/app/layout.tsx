@@ -3,11 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google"
 import StoreProvider from "@/store/StoreProvider"
 import { ThemeProvider } from "@/components/providers/ThemeProvider"
 import SessionProvider from "@/components/providers/SessionProvider"
-import Header from "@/components/Header"
 import { Toaster } from "@/components/ui/toaster"
-
+import AudioPlayer from "@/components/AudioPlayer/default"
 import "./globals.css"
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -43,7 +41,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    url: "https://secret-rewind.vercel.app",
+    url: "https://derdo.vercel.app",
     title: "derdo",
     description: "The platform for upload and listen music together with your friends.",
     siteName: "derdo",
@@ -69,9 +67,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               defaultTheme="system"
               enableSystem
               disableTransitionOnChange>
-              <Header />
               {children}
               <Toaster />
+              <AudioPlayer />
             </ThemeProvider>
           </StoreProvider>
         </SessionProvider>
