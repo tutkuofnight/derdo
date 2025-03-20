@@ -1,15 +1,21 @@
 "use client"
+import { VolumeStorage } from "@/types"
 
-export const getVolume = (): number => {
-  const volume = localStorage.getItem("vol")
+export const getVolume = (): VolumeStorage => {
+  let volume: VolumeStorage  = JSON.parse(localStorage.getItem("vol")!)
   if (volume){
-    return parseFloat(volume)
+    return {prev: parseFloat(volume.prev as string), current: parseFloat(volume.current as string)}
   }
-  return 0
+  return { prev: 0, current: 0 }
 }
 
-export const setVolume = (audioRef: any) => {
+export const setVolume = (previousValue: string | number | null, audioRef: any) => {
+  const volume = getVolume()
+
   if (audioRef.current) {
-    localStorage.setItem("vol", audioRef.current?.volume.toString())
+    localStorage.setItem("vol", JSON.stringify({
+      prev: previousValue?.toString(),
+      current: audioRef.current?.volume.toString()
+    }))
   }
 }

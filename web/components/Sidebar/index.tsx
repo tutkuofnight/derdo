@@ -17,7 +17,6 @@ import { useMemo } from "react"
 
 export default function Sidebar(){
   const [ playlists, ] = useAtom(playlistStore)
-  console.log(playlists, playlistStore)
   
   const renderingPlaylists = useMemo(() => {
     return playlists

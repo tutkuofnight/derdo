@@ -6,6 +6,7 @@ import { getVolume, setVolume } from "./functions"
 import { tracks, roomId, useAtom } from "@/store"
 import { Song } from "@/types"
 import { useSession } from "next-auth/react"
+
 export default function () {
   const [playerDuration, setPlayerDuration] = useState<number>(0)
   const audioRef = useRef<HTMLMediaElement>(null)
@@ -31,7 +32,7 @@ export default function () {
         }
       })
       audio.addEventListener('seeked', () => timeSeeked(audioRef.current?.currentTime))
-      audio.addEventListener("volumechange", () => setVolume(audioRef))
+      audio.addEventListener("volumechange", () => setVolume(null, audioRef))
 
       return () => {
         audio.removeEventListener('loadedmetadata', handleLoadedMetadata);

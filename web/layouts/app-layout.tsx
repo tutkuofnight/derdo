@@ -1,6 +1,5 @@
 "use client"
 // import OnlineAudioPlayer from "@/components/AudioPlayer"
-import DefaultAudioPlayer from "@/components/AudioPlayer/default"
 
 import Header from "@/components/Header"
 import {
@@ -10,12 +9,12 @@ import {
 } from "@/components/ui/resizable"
 import Sidebar from "@/components/Sidebar"
 import { Playlist } from "@/types"
-import { playlistStore, useAtom } from "@/store"
-import { useMemo, useEffect } from "react"
+import { playlistStore, currentPlaying, useAtom } from "@/store"
+import { useMemo } from "react"
 
 export default function({ playlists, children }: { playlists?: Playlist[], children: React.ReactNode }){
   const [ playlist, setPlaylist ] = useAtom(playlistStore)
-
+  const [ currentTrack, ] = useAtom(currentPlaying)
   if (playlists && playlists.length > 0) {
     setPlaylist(playlists)
   }
@@ -33,7 +32,6 @@ export default function({ playlists, children }: { playlists?: Playlist[], child
       <ResizablePanel defaultSize={75} style={{ padding: "20px" }}>
         <Header />
         {children}
-        <DefaultAudioPlayer />
       </ResizablePanel>
     </ResizablePanelGroup>
   )
