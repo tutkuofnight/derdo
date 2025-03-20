@@ -17,11 +17,17 @@ export type Song = {
     trackurl: string
     playlistid?: string
 }
+
 export type PlayerState = {
     isPlaying?: boolean | null
     currentTime?: number
     duration?: number
     repeat?: boolean
+}
+
+export type VolumeStorage = {
+    prev: string | number
+    current: string | number
 }
 
 export type Playlist = {
