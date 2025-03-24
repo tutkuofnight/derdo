@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from 'react'
-import { User } from '@/types'
+import { User } from '@shared/types'
 import AppLayout from '@/layouts/app-layout'
 import ImageUpload from '@/components/ImageUpload'
-import { Playlist } from '@/types'
+import { Playlist } from '@shared/types'
 import { updateUser } from '@/services/users'
 import { useToast } from "@/hooks/use-toast"
 

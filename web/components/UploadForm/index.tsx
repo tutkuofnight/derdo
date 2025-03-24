@@ -19,8 +19,8 @@ import { useSession } from "next-auth/react"
 import { saveTrack } from "@/services/tracks"
 import { Music4 } from "lucide-react"
 import { v4 } from "uuid"
-import { Playlist, Song } from "@/types"
-import { UpdateSongFormDto } from "@/types/dto"
+import { Playlist, Song } from "@shared/types"
+import { UpdateSongFormDto } from "@shared/types/dto"
 import { playlistStore, useAtom } from "@/store"
 
 export default function UploadForm({ trackData }: { trackData?: UpdateSongFormDto }) {

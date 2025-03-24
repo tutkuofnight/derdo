@@ -1,5 +1,5 @@
 "use client"
-import { VolumeStorage } from "@/types"
+import { VolumeStorage } from "@shared/types"
 
 export const getVolume = (): VolumeStorage => {
   try {

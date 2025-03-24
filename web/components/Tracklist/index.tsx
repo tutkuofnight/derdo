@@ -11,7 +11,7 @@ import { tracks, listeners, currentPlaying, playerState, useAtom } from "@/store
 import { Card } from "@/components/Track"
 import Listeners from "@/components/Listeners"
 import { Button } from "@/components/ui/button"
-import { Song } from "@/types"
+import { Song } from "@shared/types"
 import { useEffect } from "react"
 
 export default function Tracklist({ playlist, className, playlistName }: { playlist: any[], className?: string, playlistName?: string }) {

@@ -2,7 +2,7 @@ import Client from "./client"
 import AppLayout from "@/layouts/app-layout"
 import { getUserPlaylists } from "@/services/playlist"
 import { getPlaylistTracks } from "@/services/tracks"
-import { Playlist, Song } from "@/types"
+import { Playlist, Song } from "@shared/types"
 import { cookies } from "next/headers"
 
 export default async function PlaylistPage({ params }: { params: Promise<{ id: string }>}){

@@ -2,7 +2,7 @@ import UploadForm from "@/components/UploadForm"
 import AppLayout from "@/layouts/app-layout"
 
 import { cookies } from "next/headers"
-import { Playlist } from "@/types"
+import { Playlist } from "@shared/types"
 
 import { getUserPlaylists } from "@/services/playlist"
 

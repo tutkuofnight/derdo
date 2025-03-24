@@ -8,7 +8,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import Sidebar from "@/components/Sidebar"
-import { Playlist } from "@/types"
+import { Playlist } from "@shared/types"
 import { playlistStore, currentPlaying, useAtom } from "@/store"
 import { useMemo } from "react"
 

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Playlist } from "@/types"
+import { Playlist } from "@shared/types"
 
 import { useToast } from "@/hooks/use-toast"
 import { updatePlaylist, getUserPlaylists, removePlaylist } from "@/services/playlist"

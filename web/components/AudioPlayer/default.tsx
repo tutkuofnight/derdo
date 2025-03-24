@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useMemo } from "react"
 import { getVolume, setVolume } from "./functions"
 import { currentPlaying, tracks, playerState, useAtom } from "@/store"
-import { Song } from "@/types"
+import { Song } from "@shared/types"
 import { Play, Pause, SkipBack, SkipForward, Repeat, Repeat1 } from "lucide-react"
 import { Info } from "@/components/Track"
 import ImageController from "../controllers/Image"
