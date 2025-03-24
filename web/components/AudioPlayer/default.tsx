@@ -83,9 +83,6 @@ const AudioPlayer = () => {
     }
 
     setAudioPlayerState((prevState) => ({...prevState, isPlaying: true}))
-    const handleVolumeChange = () => setVolume(null, audioRef)
-
-    audio.addEventListener("volumechange", handleVolumeChange)
     
     return () => {
       controller.abort()
