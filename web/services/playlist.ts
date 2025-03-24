@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/config/db"
-import { Playlist } from "@/types"
+import { Playlist } from "@shared/types"
 import { revalidatePath } from "next/cache"
 import getPath from "@/utils/get-path"
 

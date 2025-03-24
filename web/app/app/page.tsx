@@ -2,7 +2,7 @@ import SayWelcome from "@/components/SayWelcome"
 import PlaylistComponent from "@/components/Tracklist"
 import AppLayout from "@/layouts/app-layout"
 
-import { Playlist, Song } from "@/types"
+import { Playlist, Song } from "@shared/types"
 import { cookies } from 'next/headers'
 
 import { getUserUploadedTracks } from "@/services/tracks"

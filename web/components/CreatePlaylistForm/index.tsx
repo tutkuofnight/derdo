@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import { createPlaylist } from "@/services/playlist"
 import { v4 } from "uuid"
-import { Playlist } from "@/types"
+import { Playlist } from "@shared/types"
 import { useRouter } from "next/navigation"
 
 export default function UploadForm() {

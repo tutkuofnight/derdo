@@ -1,5 +1,5 @@
 "use client"
-import { Playlist, Song } from "@/types"
+import { Playlist, Song } from "@shared/types"
 import { playlistStore, useAtom } from "@/store"
 import { useEffect, useState } from "react"
 import Tracklist from "@/components/Tracklist"

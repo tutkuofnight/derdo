@@ -4,7 +4,7 @@ import useSocket from "@/hooks/useSocket"
 // import { Play, Pause } from "lucide-react"
 import { getVolume, setVolume } from "./functions"
 import { tracks, roomId, useAtom } from "@/store"
-import { Song } from "@/types"
+import { Song } from "@shared/types"
 import { useSession } from "next-auth/react"
 
 export default function () {

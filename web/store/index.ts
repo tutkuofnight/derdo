@@ -1,5 +1,5 @@
 import { atom, useAtom } from "jotai"
-import { ListenerUser, PlayerState, Song, Playlist } from "@/types"
+import { ListenerUser, PlayerState, Song, Playlist } from "@shared/types"
 
 const playerState = atom<PlayerState | null>(null)
 const currentPlaying = atom<Song | null>(null)

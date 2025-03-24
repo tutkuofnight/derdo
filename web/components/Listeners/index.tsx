@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { ListenerUser } from "@/types"
+import { ListenerUser } from "@shared/types"
 
 export default function({ listeners }: { listeners: ListenerUser[] }) {
   return (

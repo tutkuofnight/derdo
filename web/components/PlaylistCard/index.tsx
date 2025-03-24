@@ -1,6 +1,6 @@
 "use client"
 import { Play } from "lucide-react"
-import { Playlist } from "@/types"
+import { Playlist } from "@shared/types"
 import { useParams } from "next/navigation"
 import ImageController from "@/components/controllers/Image"
 

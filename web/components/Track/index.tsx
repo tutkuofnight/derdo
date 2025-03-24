@@ -1,5 +1,5 @@
 "use client"
-import { Playlist, Song } from "@/types"
+import { Playlist, Song } from "@shared/types"
 import { Play, Pause, Repeat, Repeat1, Ellipsis } from "lucide-react"
 import { currentPlaying, playerState, playlistStore, useAtom } from "@/store"
 import { useState, useEffect } from "react"

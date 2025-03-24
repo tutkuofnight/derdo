@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import io from "socket.io-client" 
 
 import { currentPlaying, playerState, roomId, useAtom } from "@/store"
-import { Song } from "@/types"
+import { Song } from "@shared/types"
 
 const socket = io(process.env.NEXT_PUBLIC_WS_URL)
 

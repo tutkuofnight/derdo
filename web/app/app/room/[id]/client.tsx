@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import { roomId as roomIdStore, listeners, useAtom } from "@/store"
 
 import Playlist from "@/components/Tracklist"
-import { ListenerUser } from "@/types"
+import { ListenerUser } from "@shared/types"
 
 export default function({ roomId, songs, playlistName }: { roomId: string, songs: any[], playlistName: string }) {
   const [,setRoomIdState] = useAtom(roomIdStore) 

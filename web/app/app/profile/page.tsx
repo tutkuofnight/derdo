@@ -1,7 +1,7 @@
 import Client from "./client"
 import { getUserPlaylists } from "@/services/playlist"
 import { cookies } from 'next/headers'
-import { Playlist } from "@/types"
+import { Playlist } from "@shared/types"
 
 export default async function ProfilePage(){
   const cookie = await cookies()

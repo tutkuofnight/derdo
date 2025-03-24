@@ -1,4 +1,4 @@
-import { Profile } from "next-auth"
+import { Profile } from "../../web/node_modules/next-auth"
 
 export type UploadForm = {
     name: string

@@ -3,7 +3,7 @@ import { Slider } from "@/components/ui/slider"
 import { Volume1, Volume2, VolumeX } from "lucide-react"
 import { getVolume, setVolume } from "./functions"
 import { useState, useEffect, useRef } from "react"
-import { VolumeStorage } from "@/types"
+import { VolumeStorage } from "@shared/types"
 
 export default function Volume({ audioRef }: {audioRef: any}){
   const [volumeState, setVolumeState] = useState<VolumeStorage>(getVolume())

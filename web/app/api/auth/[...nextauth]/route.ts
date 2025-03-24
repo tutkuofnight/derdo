@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import db from "@/config/db"
-import { ExtendedProfile, User } from "@/types"
+import { ExtendedProfile, User } from "@shared/types"
 import { setCookie } from "@/app/actions"
 import ProfileImageResizer from "@/utils/profile-image-resizer"
 
@@ -18,7 +18,9 @@ const handler = NextAuth({
     async session({ session, token }): Promise<any> {
       const user: User | any = (await db.query(`SELECT * FROM users WHERE id = $1`, [token.sub])).rows[0]
       session.user = user
-      session.user.image = await ProfileImageResizer(session.user.image!)
+      if (session.user) {
+        session.user.image = await ProfileImageResizer(session.user.image!)
+      }
 
       await setCookie("uid", user.id)
       return session
