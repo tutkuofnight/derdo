@@ -2,13 +2,14 @@
 import { Slider } from "@/components/ui/slider"
 import { Volume1, Volume2, VolumeX } from "lucide-react"
 import { getVolume, setVolume } from "./functions"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { VolumeStorage } from "@/types"
 
 export default function Volume({ audioRef }: {audioRef: any}){
   const [volumeState, setVolumeState] = useState<VolumeStorage>(getVolume())
   const [mute, setMute] = useState<boolean>(false)
-  
+  const prevVolume = useRef<number | null>(null)
+
   const VolumeIcon = () => {
     const volume = Number(volumeState.current)
     if (volume > 0.5) {
@@ -20,25 +21,41 @@ export default function Volume({ audioRef }: {audioRef: any}){
       return <VolumeX />
     }
   }
+
   const onChange = (value: number) => {
-    audioRef.volume = value
-    setVolumeState((prevVolume) => ({ prev: prevVolume.current, current: value }))
-    console.log(volumeState)
-    setVolume(volumeState.prev, value)
+    if (mute) {
+      setMute(false)
+    }
+
+    const currentVolumeValue = typeof volumeState.current === 'number' ? volumeState.current : 0;
+    
+    audioRef.volume = value;
+    
+    const newVolumeState = { 
+      prev: currentVolumeValue,
+      current: value 
+    };
+    
+    prevVolume.current = currentVolumeValue;
+    
+    setVolumeState(newVolumeState);
+    setVolume(newVolumeState);
+
   }
 
   useEffect(() => {
     if (audioRef) {
-      if (mute == true) {
-        audioRef.volume = 0
-        setVolumeState((prevVolume) => ({ ...prevVolume, current: 0 }))
+      if (mute) {
+        const currentVolume = volumeState.current as number || 0;
+        audioRef.volume = 0;
+        setVolumeState({ prev: currentVolume, current: 0 });
       } else {
-        const vol = getVolume()
-        audioRef.volume = vol.current
-        setVolumeState((prevVolume) => ({ ...prevVolume, current: vol.current }))
+        const vol = getVolume();
+        audioRef.volume = vol.current;
+        setVolumeState({ prev: vol.prev, current: vol.current });
       }
     }
-  }, [mute])
+  }, [mute, audioRef]);
 
   return (
     <div className="hidden sm:flex sm:items-center sm:gap-2">

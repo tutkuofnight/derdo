@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react"
 import { createPlaylist } from "@/services/playlist"
 import { v4 } from "uuid"
 import { Playlist } from "@/types"
+import { useRouter } from "next/navigation"
 
 export default function UploadForm() {
   const formRef = useRef<HTMLFormElement>(null)
@@ -14,6 +15,7 @@ export default function UploadForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
   const { data:session } = useSession()
+  const { push } = useRouter()
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,6 +62,7 @@ export default function UploadForm() {
         })
         formRef.current?.reset()
         setImage(undefined)
+        return push(`/app/playlist/${dataId}`)
       }
 
     } catch (error) {

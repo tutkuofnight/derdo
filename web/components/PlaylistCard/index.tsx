@@ -1,5 +1,5 @@
 "use client"
-import { SquarePlay } from "lucide-react"
+import { Play } from "lucide-react"
 import { Playlist } from "@/types"
 import { useParams } from "next/navigation"
 import ImageController from "@/components/controllers/Image"
@@ -16,7 +16,7 @@ export default function PlaylistCard({ playlist }: { playlist: Playlist }){
       </div>
       <div className="flex justify-between items-center flex-1">
         <p className="font-medium">{playlist.name}</p>
-        <SquarePlay className="invisible group-hover:visible group-hover:text-gray-500" />
+        <Play className="invisible group-hover:visible group-hover:text-gray-50 w-[20px] h-[20px]" />
       </div>
     </div>
   )

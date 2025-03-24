@@ -1,14 +1,28 @@
 "use client"
-import { Playlist } from "@/types"
 import { useState } from "react"
+import { Playlist } from "@/types"
+
+import { useToast } from "@/hooks/use-toast"
+import { updatePlaylist, getUserPlaylists, removePlaylist } from "@/services/playlist"
+import { useSession } from "next-auth/react"
+import { playlistStore, useAtom } from "@/store"
+import { useRouter } from "next/navigation"
+
+import { PenLine, LoaderCircle, Trash } from "lucide-react"
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import ImageController from "@/components/controllers/Image"
 import { Button } from "@/components/ui/button"
 import ImageUpload from "@/components/ImageUpload"
-import { PenLine, LoaderCircle } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { updatePlaylist, getUserPlaylists } from "@/services/playlist"
-import { useSession } from "next-auth/react"
-import { playlistStore, useAtom } from "@/store"
 
 export default function PlaylistView({ playlist }: { playlist: Playlist }){
   const [formMode, setFormMode] = useState<boolean>(false)
@@ -20,6 +34,7 @@ export default function PlaylistView({ playlist }: { playlist: Playlist }){
     description?: string
   }>(playlist)
 
+  const { push } = useRouter()
   const { toast } = useToast()
   const { data: session } = useSession()
   const [, setPlaylists] = useAtom(playlistStore)
@@ -90,6 +105,16 @@ export default function PlaylistView({ playlist }: { playlist: Playlist }){
     }
   }
 
+  const handleRemovePlaylist = async () => {
+    const res = await removePlaylist(playlist.id)
+    if (res) {
+      toast({
+        title: `Playlist: ${data?.name || playlist.name} Deleted Succesfully`
+      })
+      return push("/app")
+    }
+  }
+
   return (
     <div className="flex items-end gap-5 mb-5">
       <div>
@@ -111,9 +136,39 @@ export default function PlaylistView({ playlist }: { playlist: Playlist }){
               ): (
                 <div className="flex items-center gap-2">
                   <h1 className="text-3xl font-bold my-2">{data?.name}</h1>
-                  <Button variant={"ghost"} size={"icon"} className="w-[30px] h-[30px]" onClick={activateFormMode}>
-                    <PenLine className="w-[30px] h-[30px]" />
-                  </Button>
+                  <div className="flex items-center">
+                    <Button variant={"ghost"} size={"icon"} className="w-[30px] h-[30px]" onClick={activateFormMode}>
+                      <PenLine className="w-[30px] h-[30px]" />
+                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant={"ghost"} size={"icon"} className="w-[30px] h-[30px]">
+                          <Trash className="w-[30px] h-[30px] text-red-500" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Delete Playlist</DialogTitle>
+                          <DialogDescription className="py-2">
+                            Are you sure to delete this playlist? This playlist's tracks will stay in your tracklist.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter className="sm:justify-start">
+                          <DialogClose asChild>
+                            <Button variant={"destructive"} onClick={handleRemovePlaylist}>
+                              Delete
+                            </Button>
+                          </DialogClose>
+                          <DialogClose asChild>
+                            <Button type="button" variant="secondary">
+                              Close
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+
+                  </div>
                 </div>
               )
           }

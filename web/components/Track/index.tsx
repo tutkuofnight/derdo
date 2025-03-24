@@ -96,9 +96,13 @@ export const Card = ({ song }: { song: Song }) => {
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     {playlists && playlists.length > 0 ? (
-                      playlists.map((item: Playlist, index: number) => (
-                        <DropdownMenuItem onClick={() => moveTrackAnotherPlaylist(song.id, item.id)} key={index}>{item.name}</DropdownMenuItem>
-                      ))
+                      playlists.map((item: Playlist, index: number) => {
+                        if (item.id == song.playlistid) {
+                          return 
+                        }
+                        return <DropdownMenuItem onClick={() => moveTrackAnotherPlaylist(song.id, item.id)} key={index}>{item.name}</DropdownMenuItem>
+                      }
+                      )
                     ): <small className="p-1">No playlist found...</small>}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>

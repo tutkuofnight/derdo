@@ -56,5 +56,7 @@ export const updatePlaylist = async (playlistId: string, data: Playlist) => {
 }
 
 export const removePlaylist = async (playlistId: string) => {
-  return await db.query(`DELETE FROM playlist WHERE id = $1`, [playlistId])
+  await db.query(`DELETE FROM playlist WHERE id = $1`, [playlistId])
+  revalidatePath("/app")
+  return true
 }
