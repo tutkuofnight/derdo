@@ -2,6 +2,8 @@
 
 import db from "@/config/db"
 import { Playlist } from "@/types"
+import { revalidatePath } from "next/cache"
+import getPath from "@/utils/get-path"
 
 export const createPlaylistTable = async () => {
   await db.query(`
@@ -25,6 +27,7 @@ export const createPlaylist = async (userId: string, data: Playlist): Promise<bo
     userId
   ])
   await db.query(`INSERT INTO user_playlists (userid, playlistid) VALUES ($1, $2)`, [userId, data.id])
+  revalidatePath(await getPath())
   return true
 }
 
@@ -48,6 +51,7 @@ export const updatePlaylist = async (playlistId: string, data: Playlist) => {
     values.push(item[1])
   })
   const { fields } = await db.query(`UPDATE playlist SET ${keys.join(",")} WHERE id = $${lastIndex}`, [...values, playlistId])
+  revalidatePath(await getPath())
   return fields
 }
 

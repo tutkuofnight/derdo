@@ -3,6 +3,9 @@
 import db from "@/config/db"
 import { Song } from "@/types"
 
+import { revalidatePath } from "next/cache"
+import getPath from "@/utils/get-path"
+
 export const createTrackTable = async () => {
   await db.query(`
     CREATE TABLE IF NOT EXISTS songs (
@@ -21,7 +24,7 @@ export const createTrackTable = async () => {
 }
 
 export const saveTrack = async (data: Song) => {
-  return await db.query(`INSERT INTO songs (id, name, artist, featurings, userid, imageurl, trackurl, playlistid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`, [
+  await db.query(`INSERT INTO songs (id, name, artist, featurings, userid, imageurl, trackurl, playlistid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`, [
     data.id,
     data.name,
     data.artist,
@@ -31,6 +34,8 @@ export const saveTrack = async (data: Song) => {
     data.trackurl,
     data.playlistid
   ])
+  revalidatePath(await getPath())
+  return true
 }
 
 export const getTrack = async (trackId: string) => {
@@ -61,9 +66,13 @@ export const updateTrack = async (trackId: string, data: Song) => {
     keys.push(`${item[0]} = $${index + 1}`)
     values.push(item[1])
   })
-  return await db.query(`UPDATE songs SET ${keys.join(",")} WHERE id = $${lastIndex}`, [...values, trackId])
+  await db.query(`UPDATE songs SET ${keys.join(",")} WHERE id = $${lastIndex}`, [...values, trackId])
+  revalidatePath(await getPath())
+  return true
 }
 
 export const deleteTrack = async (trackId: string) => {
-  return await db.query(`DELETE FROM songs WHERE id = $1`, [trackId])
+  await db.query(`DELETE FROM songs WHERE id = $1`, [trackId])
+  revalidatePath(await getPath())
+  return true
 }

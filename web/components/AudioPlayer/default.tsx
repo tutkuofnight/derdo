@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { getVolume, setVolume } from "./functions"
 import { currentPlaying, tracks, playerState, useAtom } from "@/store"
 import { Song } from "@/types"
@@ -9,7 +9,7 @@ import ImageController from "../controllers/Image"
 import Volume from "./volume"
 import trackTime from "@/utils/track-time"
 
-export default function () {
+const AudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
 
@@ -55,6 +55,7 @@ export default function () {
   }, [currentTrack?.id])
 
   useEffect(() => {
+    console.log("repeat degisti")
     const audio = audioRef.current
     if (!audio) return
 
@@ -74,6 +75,7 @@ export default function () {
   }, [audioPlayerState?.repeat, currentTrack?.id])
 
   useEffect(() => {
+    const controller = new AbortController()
     const audio = audioRef.current
     if (!audio) return
 
@@ -81,18 +83,13 @@ export default function () {
       progressRef.current.style.width = '0%'
     }
 
-    const handlePause = () => setAudioPlayerState({ isPlaying: false })
-    const handlePlay = () => setAudioPlayerState({ isPlaying: true })
-    const handleVolumeChange = () => setVolume(audioRef)
+    setAudioPlayerState((prevState) => ({...prevState, isPlaying: true}))
+    const handleVolumeChange = () => setVolume(null, audioRef)
 
-    audio.addEventListener("pause", handlePause)
-    audio.addEventListener("play", handlePlay)
     audio.addEventListener("volumechange", handleVolumeChange)
     
     return () => {
-      audio.removeEventListener("pause", handlePause)
-      audio.removeEventListener("play", handlePlay)
-      audio.removeEventListener("volumechange", handleVolumeChange)
+      controller.abort()
     }
   }, [currentTrack?.id])
 
@@ -177,11 +174,11 @@ export default function () {
                 <SkipBack className="w-8 h-8" />
               </button>
               {audioPlayerState?.isPlaying ? (
-                <button onClick={() => setAudioPlayerState({ isPlaying: false })}>
+                <button onClick={() => setAudioPlayerState({ ...audioPlayerState, isPlaying: false })}>
                   <Pause className="w-11 h-11" />
                 </button>
               ): (
-                <button onClick={() => setAudioPlayerState({ isPlaying: true })}>
+                <button onClick={() => setAudioPlayerState({ ...audioPlayerState, isPlaying: true })}>
                   <Play className="w-11 h-11" />
                 </button>
               )}
@@ -206,4 +203,14 @@ export default function () {
       )}
     </>
   )
+}
+
+export default function RenderAudioPlayer() {
+  const [currentTrack,] = useAtom(currentPlaying)
+  
+  const render = useMemo(() => {
+    return <AudioPlayer />
+  }, [currentTrack?.id])
+  
+  return render
 }
