@@ -23,7 +23,6 @@ export default function Profile({ playlists }: { playlists: Playlist[] }) {
   }, [session?.user])
 
   const changeImage = (file: File) => {
-    console.log("changed", file)
     formData.append('image', file)
   }
   

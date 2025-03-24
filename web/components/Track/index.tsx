@@ -61,6 +61,10 @@ export const Card = ({ song }: { song: Song }) => {
     await deleteTrack(id)
   }
 
+  const movePlaylist = () => {
+    return playlists.filter(playlist => playlist.id !== song.playlistid)
+  }
+
   return (
     <div className={`flex items-center justify-between border-b p-2 px-4 hover:bg-gray-100 hover:dark:bg-white hover:dark:bg-opacity-10 hover:rounded-md transition-colors ${activeCard}`}>
       <button className="flex items-center gap-4" onClick={() => handleCardClick(song)}>
@@ -95,15 +99,11 @@ export const Card = ({ song }: { song: Song }) => {
                 <DropdownMenuSubTrigger>Move to</DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    {playlists && playlists.length > 0 ? (
-                      playlists.map((item: Playlist, index: number) => {
-                        if (item.id == song.playlistid) {
-                          return 
-                        }
-                        return <DropdownMenuItem onClick={() => moveTrackAnotherPlaylist(song.id, item.id)} key={index}>{item.name}</DropdownMenuItem>
-                      }
-                      )
-                    ): <small className="p-1">No playlist found...</small>}
+                    {movePlaylist() && movePlaylist().length > 0 ? (
+                      movePlaylist().map((item: Playlist, index: number) => (
+                        <DropdownMenuItem onClick={() => moveTrackAnotherPlaylist(song.id, item.id)} key={index}>{item.name}</DropdownMenuItem>
+                      ))
+                    ): <span className="p-3 text-sm">No playlist found...</span>}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>

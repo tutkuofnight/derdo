@@ -88,7 +88,6 @@ export default function PlaylistView({ playlist }: { playlist: Playlist }){
       
       if (res) {
         const playlists = await getUserPlaylists(session?.user.id!)
-        console.log(playlists)
         setPlaylists(playlists)
         setFormMode(false)
         return toast({

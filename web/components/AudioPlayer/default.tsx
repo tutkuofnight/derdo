@@ -55,7 +55,6 @@ const AudioPlayer = () => {
   }, [currentTrack?.id])
 
   useEffect(() => {
-    console.log("repeat degisti")
     const audio = audioRef.current
     if (!audio) return
 

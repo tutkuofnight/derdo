@@ -37,7 +37,6 @@ import { trackUpload, trackImageUpload, playlistImageUpload, userImageUpload } f
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
-  console.log()
   return res.status(200).json({
     message: "hi, derdo!",
   })
