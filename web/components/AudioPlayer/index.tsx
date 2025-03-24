@@ -32,7 +32,6 @@ export default function () {
         }
       })
       audio.addEventListener('seeked', () => timeSeeked(audioRef.current?.currentTime))
-      audio.addEventListener("volumechange", () => setVolume(null, audioRef))
 
       return () => {
         audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
