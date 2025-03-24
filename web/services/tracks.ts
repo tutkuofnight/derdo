@@ -39,12 +39,12 @@ export const saveTrack = async (data: Song) => {
 }
 
 export const getTrack = async (trackId: string) => {
-  const { rows } = await db.query(`SELECT id, name, artist, featurings, imageurl, trackurl FROM songs WHERE id = $1`, [trackId])
+  const { rows } = await db.query(`SELECT id, playlistid, name, artist, featurings, imageurl, trackurl FROM songs WHERE id = $1`, [trackId])
   return rows
 }
 
 export const getUserUploadedTracks = async (userId: string) => {
-  const { rows } = await db.query(`SELECT id, name, artist, featurings, imageurl, trackurl FROM songs WHERE userid = $1`, [userId])
+  const { rows } = await db.query(`SELECT id, playlistid, name, artist, featurings, imageurl, trackurl FROM songs WHERE userid = $1`, [userId])
   return rows
 }
 

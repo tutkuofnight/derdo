@@ -55,7 +55,6 @@ const AudioPlayer = () => {
   }, [currentTrack?.id])
 
   useEffect(() => {
-    console.log("repeat degisti")
     const audio = audioRef.current
     if (!audio) return
 
@@ -84,9 +83,6 @@ const AudioPlayer = () => {
     }
 
     setAudioPlayerState((prevState) => ({...prevState, isPlaying: true}))
-    const handleVolumeChange = () => setVolume(null, audioRef)
-
-    audio.addEventListener("volumechange", handleVolumeChange)
     
     return () => {
       controller.abort()
