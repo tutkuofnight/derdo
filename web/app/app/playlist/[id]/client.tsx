@@ -28,7 +28,7 @@ export default function PlaylistPageClient({ playlistTracks }: { playlistTracks:
       {!isLoading ? (
         <div>
           <PlaylistView playlist={activePlaylist!} />
-          <Tracklist playlist={playlistTracks} />
+          <Tracklist playlist={playlistTracks} playlistId={activePlaylist?.name} />
         </div>
       ) : <p>Loading...</p>}
     </>

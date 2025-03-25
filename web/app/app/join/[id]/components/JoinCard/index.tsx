@@ -10,7 +10,7 @@ import Image from "next/image"
 import { Disc3 } from "lucide-react"
 import Link from "next/link"
 
-export default function({ roomId, user }: { roomId: string, user: any}){
+export default function({ roomId, playlistName, user }: { roomId: string, playlistName?: string, user: any}){
   return (
     <div className="w-full h-screen fixed top-0 left-0 bg-black bg-opacity-70 z-10 grid place-items-center">
       <Card className="shadow-2xl">
@@ -22,7 +22,7 @@ export default function({ roomId, user }: { roomId: string, user: any}){
             </div>
             <CardTitle>
               <p className="text-2xl">{ user.name }</p>
-              <p className="text-xl">Invited you listen together!</p>
+              <p className="text-xl">Invited you to listen: "{playlistName || `${user.name}'s Playlist`}"</p>
             </CardTitle>
           </div>
         </CardHeader>

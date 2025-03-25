@@ -33,7 +33,12 @@ const AudioPlayer = () => {
     }
 
     audio.addEventListener('loadedmetadata', handleLoadedMetadata)
-    
+    window.addEventListener("keydown", e => {
+      e.preventDefault()
+      if (e.code == "Space") {
+        handlePlayPause()
+      }
+    })
     return () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
     }
@@ -138,10 +143,14 @@ const AudioPlayer = () => {
     setAudioPlayerState({ ...audioPlayerState, repeat: !audioPlayerState?.repeat })
   }
 
+  const handlePlayPause = () => {
+    setAudioPlayerState((prevData) => ({...prevData, isPlaying: !prevData?.isPlaying}))
+  }
+
   return (
     <>
       {currentTrack && (
-        <div className="w-full bg-slate-50 dark:bg-black border-t flex flex-col py-4 fixed bottom-0 left-0">
+        <div className="w-full lg:w-[calc(100%-40px)] lg:max-w-[1326px] transition-all bg-slate-100 border-slate-400 dark:bg-black border-t flex flex-col py-4 lg:py-2 fixed bottom-0 left-0 lg:left-[50%] lg:right-[50%] lg:-translate-x-[50%] lg:-translate-y-[50%] lg:-mb-4 lg:rounded-lg">
           <div className="w-full h-1 hover:h-[6px] transition-all bg-gray-200 dark:bg-opacity-10 cursor-pointer absolute top-0 left-0" onClick={timeSeeked}>
             <div ref={progressRef} style={{ width: `${(duration / audioRef.current?.duration!) * 100}%` }} className={`h-full bg-gradient-to-r from-sky-400 to-purple-500`} onClick={timeSeeked}></div>
           </div>
@@ -170,11 +179,11 @@ const AudioPlayer = () => {
                 <SkipBack className="w-8 h-8" />
               </button>
               {audioPlayerState?.isPlaying ? (
-                <button onClick={() => setAudioPlayerState({ ...audioPlayerState, isPlaying: false })}>
+                <button onClick={handlePlayPause}>
                   <Pause className="w-11 h-11" />
                 </button>
               ): (
-                <button onClick={() => setAudioPlayerState({ ...audioPlayerState, isPlaying: true })}>
+                <button onClick={handlePlayPause}>
                   <Play className="w-11 h-11" />
                 </button>
               )}
