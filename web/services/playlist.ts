@@ -38,7 +38,7 @@ export const getUserPlaylists = async (userId: string) => {
 
 export const getPlaylist = async (playlistId: string, userId: string) => {
   const { rows } = await db.query(`SELECT * FROM playlist WHERE id = $1 AND userid = $2`, [playlistId, userId])
-  return rows
+  return rows[0]
 }
 
 export const updatePlaylist = async (playlistId: string, data: Playlist) => {

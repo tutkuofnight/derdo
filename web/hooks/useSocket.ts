@@ -27,8 +27,12 @@ const useSocket = () => {
     })
   }, [])
 
-  const joinRoom = async (data: { creator: ListenerUser, playlist: string }, roomId: string) => {
-    socket.emit("join-room", { data }, roomId)
+  const createRoom = async (data: { creator: ListenerUser, playlist: string }, roomId: string) => {
+    socket.emit("create-room", { data }, roomId)
+  }
+
+  const joinRoom = async (user: ListenerUser, roomId: string) => {
+    socket.emit("join-room", { user }, roomId)
   }
 
   const setTrack = (song: Song) => {
@@ -52,7 +56,7 @@ const useSocket = () => {
     setAudioPlayerState({ currentTime: duration })
   }
 
-  return { joinRoom, setTrack, playMusic, pauseMusic, setAudioPlayerState, timeSeeked, audioPlayerState, currentTrack, socket }
+  return { createRoom, joinRoom, setTrack, playMusic, pauseMusic, setAudioPlayerState, timeSeeked, audioPlayerState, currentTrack, socket }
 }
 
 export default useSocket

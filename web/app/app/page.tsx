@@ -1,5 +1,5 @@
 import SayWelcome from "@/components/SayWelcome"
-import PlaylistComponent from "@/components/Tracklist"
+import Tracklist from "@/components/Tracklist"
 import AppLayout from "@/layouts/app-layout"
 
 import { Playlist, Song } from "@shared/types"
@@ -18,7 +18,7 @@ export default async function () {
   return (
     <AppLayout playlists={playlists}>
       <SayWelcome />
-      <PlaylistComponent playlist={tracks} />
+      <Tracklist tracklist={tracks} />
     </AppLayout>
   )
 }

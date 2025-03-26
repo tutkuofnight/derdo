@@ -8,9 +8,20 @@ import {
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Disc3 } from "lucide-react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
+import useSocket from "@/hooks/useSocket"
+import { useSession } from "next-auth/react"
 
-export default function({ roomId, playlistName, user }: { roomId: string, playlistName?: string, user: any}){
+export default function({ roomId, playlistName, user }: { roomId: string, playlistName?: string, user: any }){
+  const { push } = useRouter()
+  const { joinRoom } = useSocket()
+  const { data:session } = useSession()
+
+  const handleJoinRoom = async () => {
+    await joinRoom({ id: session?.user.id!, name: session?.user.name!, image: session?.user.image! }, roomId)
+    push(`/app/room/${roomId}`)
+  }
+
   return (
     <div className="w-full h-screen fixed top-0 left-0 bg-black bg-opacity-70 z-10 grid place-items-center">
       <Card className="shadow-2xl">
@@ -27,9 +38,7 @@ export default function({ roomId, playlistName, user }: { roomId: string, playli
           </div>
         </CardHeader>
         <CardFooter>
-          <Link href={"/app/room/" + roomId} className="w-full">
-            <Button className="w-full">Join the room</Button>
-          </Link>
+          <Button className="w-full" onClick={handleJoinRoom}>Join the room</Button>
         </CardFooter>
       </Card>
     </div>
