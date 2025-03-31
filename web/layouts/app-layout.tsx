@@ -12,18 +12,18 @@ import { Playlist } from "@shared/types"
 import { playlistStore, useAtom } from "@/store"
 import { useMemo, useEffect } from "react"
 
-export default function({ playlists, children }: { playlists?: Playlist[], children: React.ReactNode }){
-  const [ playlist, setPlaylist ] = useAtom(playlistStore)
+export default function AppLayout({ playlists, children }: { playlists?: Playlist[], children: React.ReactNode }) {
+  const [playlist, setPlaylist] = useAtom(playlistStore);
 
   useEffect(() => {
     if (playlists && playlists.length > 0) {
-      setPlaylist(playlists)
+      setPlaylist(playlists);
     }
-  }, [playlists])
+  }, [playlists]);
 
   const memoizedSidebar = useMemo(() => {
-    return <Sidebar />
-  }, [playlist])
+    return <Sidebar />;
+  }, [playlist]);
 
   return (
     <ResizablePanelGroup direction="horizontal" className="overflow-y-hidden lg:max-w-[1366px] lg:mx-auto">
@@ -36,5 +36,5 @@ export default function({ playlists, children }: { playlists?: Playlist[], child
         {children}
       </ResizablePanel>
     </ResizablePanelGroup>
-  )
+  );
 }
