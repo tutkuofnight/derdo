@@ -113,11 +113,19 @@ const redisClient = new Redis({
 
 // Socket.IO Events
 io.on("connection", (socket) => {
-  socket.on("join-room", async ({ data }: { data: { creator: ListenerUser, playlist: string } }, roomId: string) => {
+  
+  socket.on("create-room", async ({ data }: { data: { creator: ListenerUser, playlist: string } }, roomId: string) => {
     socket.join(roomId)
+    await redisClient.set(`room:${roomId}`, JSON.stringify({ playlist: data.playlist, creator: data.creator }))
     await redisClient.rpush(`room:${roomId}:users`, JSON.stringify(data.creator))
     const roomUsers = await redisClient.lrange(`room:${roomId}:users`, 0, -1)
-    console.log(typeof roomUsers, roomUsers)
+    io.to(roomId).emit("room-users", { roomUsers })
+  })
+
+  socket.on("join-room", async (user: ListenerUser, roomId: string) => {
+    socket.join(roomId)
+    await redisClient.rpush(`room:${roomId}:users`, JSON.stringify(user))
+    const roomUsers = await redisClient.lrange(`room:${roomId}:users`, 0, -1)
     io.to(roomId).emit("room-users", { roomUsers })
   })
 
@@ -151,7 +159,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/room/info/:id", async (req: Request, res: Response) => {
-  const roomInfo: string = await redisClient.get(`room:${req.params.id}`) as string
+  const roomInfo = await redisClient.get(`room:${req.params.id}`) as string
   return res.status(200).json({
     room: JSON.parse(roomInfo)
   })
