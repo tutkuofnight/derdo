@@ -16,7 +16,7 @@ export default function Welcome(){
 
   return (
     <section>
-      <div className="w-full flex flex-col pb-[32px] pt-4">
+      <div className="w-full flex flex-col py-8">
         <p className="opacity-80">{message},</p>
         <h1 className="text-4xl font-bold">{session?.user?.name}</h1>
       </div>

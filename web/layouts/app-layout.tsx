@@ -11,6 +11,7 @@ import Sidebar from "@/components/Sidebar"
 import { Playlist } from "@shared/types"
 import { playlistStore, currentPlaying, useAtom } from "@/store"
 import { useMemo } from "react"
+import isResponsive from "@/hooks/is-reponsive"
 
 export default function({ playlists, children }: { playlists?: Playlist[], children: React.ReactNode }){
   const [ playlist, setPlaylist ] = useAtom(playlistStore)
@@ -25,10 +26,10 @@ export default function({ playlists, children }: { playlists?: Playlist[], child
 
   return (
     <ResizablePanelGroup direction="horizontal" className="overflow-y-hidden lg:max-w-[1366px] lg:mx-auto">
-      <ResizablePanel defaultSize={20} minSize={20} maxSize={30} style={{ padding: "20px" }}>
+      <ResizablePanel defaultSize={20} minSize={20} maxSize={30} style={{ padding: "20px" }} className="hidden md:block">
         {memoizedSidebar}
       </ResizablePanel>
-      <ResizableHandle />
+      <ResizableHandle className="hidden md:block" />
       <ResizablePanel defaultSize={75} style={{ padding: "20px" }}>
         <Header />
         {children}

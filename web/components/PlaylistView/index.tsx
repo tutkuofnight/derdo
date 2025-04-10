@@ -116,10 +116,10 @@ export default function PlaylistView({ playlist }: { playlist: Playlist }){
 
   return (
     <div className="flex items-end gap-5 mb-5">
-      <div>
+      <div className="mt-5">
         {
           formMode ? <ImageUpload defaultImage={data.image} changeImage={(file) => setImage(file)} /> :
-          <ImageController url={data.image} type="playlist" className="w-[200px] h-[200px]" iconSize="w-[60px] h-[60px]" /> 
+          <ImageController url={data.image} type="playlist" className="w-[150px] h-[150px] md:w-[200px] md:h-[200px]" iconSize="w-[60px] h-[60px]" /> 
         }
       </div>
       <div className="mb-3">
@@ -133,8 +133,8 @@ export default function PlaylistView({ playlist }: { playlist: Playlist }){
                   <input type="text" id="name" name="name" value={data?.name} placeholder="Playlist Name..." className="text-3xl form-input border-b p-0" onChange={(e: any) => handleChange("name", e.target.value)} /> 
                 </div>
               ): (
-                <div className="flex items-center gap-2">
-                  <h1 className="text-3xl font-bold my-2">{data?.name}</h1>
+                <div className="flex flex-col mb-2 sm:flex-row sm:items-center sm:gap-2">
+                  <h1 className="text-3xl font-bold sm:my-2 mt-2">{data?.name}</h1>
                   <div className="flex items-center">
                     <Button variant={"ghost"} size={"icon"} className="w-[30px] h-[30px]" onClick={activateFormMode}>
                       <PenLine className="w-[30px] h-[30px]" />
