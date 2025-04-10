@@ -6,10 +6,9 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { usePathname } from "next/navigation"
 
-import { tracks, listeners, useAtom } from "@/store"
+import { tracks, useAtom } from "@/store"
 
 import { Card } from "@/components/Track"
-import Listeners from "@/components/Listeners"
 import { Button } from "@/components/ui/button"
 import { ListenerUser, Playlist, Song } from "@shared/types"
 import { useEffect, useState } from "react"
@@ -17,7 +16,6 @@ import { v4 } from "uuid"
 
 export default function Tracklist({ tracklist, className, playlist }: { tracklist: Song[], className?: string, playlist?: Playlist }) {
   const [,setTracklist] = useAtom(tracks)
-  const [listenerUsers,] = useAtom(listeners)
   const [roomLoading, setRoomLoading] = useState<boolean>(false)
   const { data: session } = useSession()
   const { toast } = useToast()
