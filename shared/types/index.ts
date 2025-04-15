@@ -52,6 +52,7 @@ export type User = {
 }
 
 export type ListenerUser = {
+    id: string
     name: string
     image: string
 }

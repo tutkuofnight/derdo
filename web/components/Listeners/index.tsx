@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/tooltip"
 import { ListenerUser } from "@shared/types"
 
-export default function({ listeners }: { listeners: ListenerUser[] }) {
+export default function({ listeners }: { listeners: any[] }) {
   return (
     <div className="flex flex-wrap gap-2 max-w-[250px]">
-      {listeners.map((user: ListenerUser, index: number) => (
+      {listeners.map(({ user }: { user: ListenerUser }, index: number) => (
         <TooltipProvider key={index}>
           <Tooltip>
             <TooltipTrigger>

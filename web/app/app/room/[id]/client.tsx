@@ -1,42 +1,47 @@
 "use client"
 import { useSession } from "next-auth/react"
 import useSocket from "@/hooks/useSocket"
-import { useEffect } from "react"
-import { roomId as roomIdStore, listeners, useAtom } from "@/store"
+import { useEffect, useState } from "react"
 
-import Playlist from "@/components/Tracklist"
-import { ListenerUser } from "@shared/types"
+import Tracklist from "@/components/Tracklist"
+import Listeners from "@/components/Listeners"
 
-export default function({ roomId, songs, playlistName }: { roomId: string, songs: any[], playlistName: string }) {
-  const [,setRoomIdState] = useAtom(roomIdStore) 
-  const [listenerUsers, setListenerUsers] = useAtom(listeners)
+import { Playlist } from "@shared/types"
+
+
+export default function({ roomId, songs, playlist }: { roomId: string, songs: any[], playlist: Playlist }) {
+  const [listenerUsers, setListenerUsers] = useState<any[]>([])
   const { data:session } = useSession()
-  const { joinRoom, socket } = useSocket()
-  
-  setRoomIdState(roomId)
+  const { socket, joinRoom, leaveRoom } = useSocket()
   
   useEffect(() => {
-    if (session?.user) {
-      joinRoom({ user: { name: session?.user.name as string, image: session?.user.image as string }, room: roomId})
-      
-      socket.on("joinedUser", ({ data }) => {
-        const findedUser = listenerUsers.find((item: ListenerUser) => item.name == data.user.name)
-        if (!findedUser) {
-          setListenerUsers([...listenerUsers, data.user])
-        }
-      }) 
+    if (session?.user && socket) {
+      socket.on("room-users", ({ roomUsers }) => {
+        setListenerUsers(roomUsers.map((item: string) => JSON.parse(item)))
+      })
+
+      return () => {
+        socket.off("room-users")
+      }
     }
-  }, [session?.user])
+  }, [session?.user, socket])
 
   useEffect(() => {
+    joinRoom({ id: session?.user.id!, name: session?.user.name!, image: session?.user.image! }, roomId)
+
     return () => {
+      leaveRoom({ id: session?.user.id!, name: session?.user.name!, image: session?.user.image! }, roomId)
       setListenerUsers([])
     }
   }, [])
 
   return (
-    <div className="flex">
-      <Playlist playlist={songs} className="flex-1" playlistName={playlistName} />
+    <div>
+      <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between pb-[32px] pt-4">
+        <h1 className="text-4xl font-bold">{playlist.name}</h1>
+        <Listeners listeners={listenerUsers} />
+      </div>
+      <Tracklist tracklist={songs} className="flex-1" playlist={playlist} />
     </div>
   )
 }

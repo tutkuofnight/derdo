@@ -1,3 +1,4 @@
+import { ListenerUser } from '@shared/types';
 import express, { Request, Response } from "express"
 import { createServer } from "node:http"
 import { Server } from "socket.io"
@@ -5,7 +6,7 @@ import cors from "cors"
 import bodyParser from "body-parser"
 import path from "node:path"
 import dotenv from "dotenv"
-import { createClient } from "redis"
+import Redis from "ioredis"
 
 dotenv.config();
 
@@ -19,9 +20,6 @@ const io = new Server(server, {
     credentials: true,
   },
 })
-const client = createClient({ url: process.env.REDIS_URL })
-.on('error', err => console.log('Redis Client Error', err))
-.connect()
 
 // Middleware
 app.use(bodyParser.json({ limit: "50mb" }))
@@ -104,12 +102,27 @@ app.post("/user/upload/image/:id", userImageUpload.single("image"), (req: Reques
   })
 })
 
+// Create redis client
+const redisClient = new Redis({
+  port: 6379,
+  host: "127.0.0.1",
+  username: "default",
+  password: "admin",
+  db: 0,
+})
+
 // Socket.IO Events
 io.on("connection", (socket) => {
-  socket.on("join-room", ({ data }: { data: { room: string } }) => {
-    socket.join(data.room)
-    console.log("User joined the room:", data.room)
-    io.to(data.room).emit("joinedUser", { data })
+  
+  socket.on("create-room", async ({ data }: { data: { creator: ListenerUser, playlist: string } }, roomId: string) => {
+    await redisClient.set(`room:${roomId}`, JSON.stringify({ playlist: data.playlist, creator: data.creator }))
+  })
+
+  socket.on("join-room", async (user: ListenerUser, roomId: string) => {
+    socket.join(roomId)
+    await redisClient.rpush(`room:${roomId}:users`, JSON.stringify(user))
+    const roomUsers = await redisClient.lrange(`room:${roomId}:users`, 0, -1)
+    io.to(roomId).emit("room-users", { roomUsers })
   })
 
   socket.on("set", (data: any, room: string) => {
@@ -128,11 +141,25 @@ io.on("connection", (socket) => {
     socket.to(room).emit("timeSeeked", duration)
   })
 
+  socket.on("disconnect-room", async (user: ListenerUser, room:string) => {
+    await redisClient.lrem(`room:${room}:users`, 0, JSON.stringify(user))
+    const roomUsers = await redisClient.lrange(`room:${room}:users`, 0, -1)
+    socket.to(room).emit("room-users", { roomUsers })
+    socket.disconnect()
+  })
+
   // Debugging: Check rooms and clients
   // io.of('/').adapter.rooms.forEach((clients, room) => {
   //     console.log(`Room: ${room}, Clients: ${[...clients]}`);
   // });
 });
+
+app.get("/room/info/:id", async (req: Request, res: Response) => {
+  const roomInfo = await redisClient.get(`room:${req.params.id}`) as string
+  return res.status(200).json({
+    room: JSON.parse(roomInfo)
+  })
+})
 
 // Start Server
 const port = process.env.PORT

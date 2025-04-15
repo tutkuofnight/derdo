@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import io from "socket.io-client" 
 
 import { currentPlaying, playerState, roomId, useAtom } from "@/store"
-import { Song } from "@shared/types"
+import { ListenerUser, Song } from "@shared/types"
 
 const socket = io(process.env.NEXT_PUBLIC_WS_URL)
 
@@ -27,8 +27,12 @@ const useSocket = () => {
     })
   }, [])
 
-  const joinRoom = (data: { user: { name: string, image: string }, room: string }) => {
-    socket.emit("join-room", { data }, room)
+  const createRoom = async (data: { creator: ListenerUser, playlist: string }, roomId: string) => {
+    socket.emit("create-room", { data }, roomId)
+  }
+
+  const joinRoom = async (user: ListenerUser, roomId: string) => {
+    socket.emit("join-room", { user }, roomId)
   }
 
   const setTrack = (song: Song) => {
@@ -51,8 +55,11 @@ const useSocket = () => {
     socket.emit("timeSeeked", { duration }, room)
     setAudioPlayerState({ currentTime: duration })
   }
-
-  return { joinRoom, setTrack, playMusic, pauseMusic, setAudioPlayerState, timeSeeked, audioPlayerState, currentTrack, socket }
+  const leaveRoom = (user: ListenerUser, roomId: string) => {
+    socket.emit("disconnect-room", { user }, roomId)
+    socket.disconnect()
+  }
+  return { createRoom, joinRoom, setTrack, playMusic, pauseMusic, setAudioPlayerState, timeSeeked, leaveRoom, audioPlayerState, currentTrack, socket }
 }
 
 export default useSocket
