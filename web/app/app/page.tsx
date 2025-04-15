@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/options"
 import { Playlist, Song } from "@shared/types";
 import { getUserUploadedTracks } from "@/services/tracks";
-import { getUserPlaylists } from "@/services/playlist";
 import SayWelcome from "@/components/SayWelcome";
 import Tracklist from "@/components/Tracklist";
 import AppLayout from "@/layouts/app-layout";
