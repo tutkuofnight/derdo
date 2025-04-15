@@ -14,11 +14,8 @@ import { useSession } from "next-auth/react"
 
 export default function({ roomId, playlistName, user }: { roomId: string, playlistName?: string, user: any }){
   const { push } = useRouter()
-  const { joinRoom } = useSocket()
-  const { data:session } = useSession()
 
   const handleJoinRoom = async () => {
-    await joinRoom({ id: session?.user.id!, name: session?.user.name!, image: session?.user.image! }, roomId)
     push(`/app/room/${roomId}`)
   }
 

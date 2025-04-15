@@ -55,8 +55,11 @@ const useSocket = () => {
     socket.emit("timeSeeked", { duration }, room)
     setAudioPlayerState({ currentTime: duration })
   }
-
-  return { createRoom, joinRoom, setTrack, playMusic, pauseMusic, setAudioPlayerState, timeSeeked, audioPlayerState, currentTrack, socket }
+  const leaveRoom = (user: ListenerUser, roomId: string) => {
+    socket.emit("disconnect-room", { user }, roomId)
+    socket.disconnect()
+  }
+  return { createRoom, joinRoom, setTrack, playMusic, pauseMusic, setAudioPlayerState, timeSeeked, leaveRoom, audioPlayerState, currentTrack, socket }
 }
 
 export default useSocket

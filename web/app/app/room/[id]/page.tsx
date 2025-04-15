@@ -22,7 +22,7 @@ export default async function({ params } : { params: Promise<{ id: string }> }) 
 
   const playlist: Playlist = await getPlaylist(room.playlist, room.creator.id)
 
-  const { rows: songs } = await db.query(`SELECT id, name, artist, featurings FROM songs WHERE ${playlist.id == room.creator.id ? "userid = $1" : "playlistid = $1"}`, [room.playlist])
+  const { rows: songs } = await db.query(`SELECT id, name, artist, imageurl featurings FROM songs WHERE ${playlist.id == room.creator.id ? "userid = $1" : "playlistid = $1"}`, [room.playlist])
   return (
     <AppLayout>
       <Client roomId={id} songs={songs} playlist={playlist} />

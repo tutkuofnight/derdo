@@ -115,11 +115,7 @@ const redisClient = new Redis({
 io.on("connection", (socket) => {
   
   socket.on("create-room", async ({ data }: { data: { creator: ListenerUser, playlist: string } }, roomId: string) => {
-    socket.join(roomId)
     await redisClient.set(`room:${roomId}`, JSON.stringify({ playlist: data.playlist, creator: data.creator }))
-    await redisClient.rpush(`room:${roomId}:users`, JSON.stringify(data.creator))
-    const roomUsers = await redisClient.lrange(`room:${roomId}:users`, 0, -1)
-    io.to(roomId).emit("room-users", { roomUsers })
   })
 
   socket.on("join-room", async (user: ListenerUser, roomId: string) => {

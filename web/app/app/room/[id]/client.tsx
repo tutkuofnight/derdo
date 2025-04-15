@@ -8,10 +8,11 @@ import Listeners from "@/components/Listeners"
 
 import { Playlist } from "@shared/types"
 
+
 export default function({ roomId, songs, playlist }: { roomId: string, songs: any[], playlist: Playlist }) {
   const [listenerUsers, setListenerUsers] = useState<any[]>([])
   const { data:session } = useSession()
-  const { socket } = useSocket()
+  const { socket, joinRoom, leaveRoom } = useSocket()
   
   useEffect(() => {
     if (session?.user && socket) {
@@ -26,17 +27,18 @@ export default function({ roomId, songs, playlist }: { roomId: string, songs: an
   }, [session?.user, socket])
 
   useEffect(() => {
+    joinRoom({ id: session?.user.id!, name: session?.user.name!, image: session?.user.image! }, roomId)
+
     return () => {
+      leaveRoom({ id: session?.user.id!, name: session?.user.name!, image: session?.user.image! }, roomId)
       setListenerUsers([])
     }
   }, [])
 
   return (
     <div>
-      <div className="w-full flex flex-col pb-[32px] pt-4">
+      <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between pb-[32px] pt-4">
         <h1 className="text-4xl font-bold">{playlist.name}</h1>
-      </div>
-      <div>
         <Listeners listeners={listenerUsers} />
       </div>
       <Tracklist tracklist={songs} className="flex-1" playlist={playlist} />
