@@ -4,7 +4,7 @@ import { getPlaylistTracks } from "@/services/tracks"
 import { Song } from "@shared/types"
 
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 
 export default async function PlaylistPage({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params

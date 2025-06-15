@@ -9,6 +9,16 @@ const tracks = atom<Song[]>([])
 const listeners = atom<ListenerUser[]>([])
 const playlistStore = atom<Playlist[]>([])
 
+const stepsManager = atom<{
+  currentStep: number
+  totalSteps: string[]
+} | null>({
+  currentStep: 1,
+  totalSteps: ["Enter Track Info", "Upload Track", "Select Playlist"]
+})
+
+ 
+
 export {
   playerState,
   currentPlaying,
@@ -17,5 +27,6 @@ export {
   tracks,
   listeners,
   playlistStore,
+  stepsManager,
   useAtom
 }

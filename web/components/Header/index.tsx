@@ -1,7 +1,7 @@
 "use client"
 import { usePathname, useRouter } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
-import { ArrowRight, CloudUpload, Menu } from "lucide-react"
+import { ArrowRight, CloudUpload, Menu, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -13,10 +13,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet"
 
@@ -25,14 +32,18 @@ import { Button } from "@/components/ui/button"
 import ThemeSwithcer from "@/components/ThemeSwitcher"
 import Logo from "@/components/Logo"
 import isResponsive from "@/hooks/is-reponsive"
+import FormManager from "../TrackUploadFields/form-manager"
+import { useState } from "react"
 
 export default function Header() {
+
   const { data:session, status } = useSession()
   const pathname = usePathname()
   const { push } = useRouter()
   const width = isResponsive()
   const isMobile = width < 640
-  
+  const [openUploadDrawer, setOpenUploadDrawer] = useState<boolean>(false)
+
   const headerButtons = () => {
     if (status == "authenticated" && pathname == "/") {
       return (
@@ -47,12 +58,23 @@ export default function Header() {
     else if (status == "authenticated") {
       return (
         <div className="flex items-center gap-4">
-          <Link href="/app/upload">
-            <Button size={isMobile ? "icon" : "default"} className="font-bold">
-              <CloudUpload />
-              <span className="hidden sm:block">Upload</span>
-            </Button>
-          </Link>
+          <Drawer open={openUploadDrawer} onOpenChange={setOpenUploadDrawer}>
+            <DrawerTrigger asChild>
+              <Button size={isMobile ? "icon" : "default"} className="font-bold">
+                <CloudUpload />
+                <span className="hidden sm:block">Upload</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="h-[90vh]">
+              <div>
+                <DrawerTitle className="text-center mt-10 text-3xl">Upload Track</DrawerTitle>
+                <Button variant={"ghost"} size={"icon"} className="absolute top-5 right-5" onClick={() => setOpenUploadDrawer(false)}>
+                  <X />
+                </Button>
+              </div>
+              <FormManager></FormManager>
+            </DrawerContent>
+          </Drawer>
           <ThemeSwithcer />
           <DropdownMenu>
             <DropdownMenuTrigger>

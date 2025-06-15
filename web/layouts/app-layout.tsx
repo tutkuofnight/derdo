@@ -10,13 +10,16 @@ import Sidebar from "@/components/Sidebar"
 
 import { Playlist } from "@shared/types"
 import { playlistStore, useAtom } from "@/store"
-import { useMemo } from "react"
+import { useMemo, useEffect } from "react"
 
 export default function({ playlists, children }: { playlists?: Playlist[], children: React.ReactNode }){
   const [ playlist, setPlaylist ] = useAtom(playlistStore)
-  if (playlists && playlists.length > 0) {
-    setPlaylist(playlists)
-  }
+
+  useEffect(() => {
+    if (playlists && playlists.length > 0) {
+      setPlaylist(playlists)
+    }
+  }, [playlists])
 
   const memoizedSidebar = useMemo(() => {
     return <Sidebar />

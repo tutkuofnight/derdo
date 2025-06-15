@@ -119,6 +119,24 @@ main {
 
 @layer components {
   .form-input {
-    @apply w-full font-bold outline-none bg-transparent py-2
+    @apply w-full font-bold outline-none bg-transparent py-2 border-b-2 border-border focus:border-primary;
   }
+}
+
+.step-line::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 500px;
+  height: 10px;
+  background-color: var(--border);
+  transform: translateY(-50%);
+  z-index: -1;
+}
+
+body.behind {
+  transition: 250ms all;
+  transform: scale(0.95);
+  opacity: 0.5;
 }

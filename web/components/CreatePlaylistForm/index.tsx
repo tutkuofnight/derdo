@@ -9,7 +9,7 @@ import { v4 } from "uuid"
 import { Playlist } from "@shared/types"
 import { useRouter } from "next/navigation"
 
-export default function UploadForm() {
+export default function UploadForm({ redirect = true }: { redirect?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null)
   const [image, setImage] = useState<File>()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -62,7 +62,10 @@ export default function UploadForm() {
         })
         formRef.current?.reset()
         setImage(undefined)
-        return push(`/app/playlist/${dataId}`)
+        if (redirect) {
+          return push(`/app/playlist/${dataId}`)
+        }
+        return 
       }
 
     } catch (error) {
