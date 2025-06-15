@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/options"
 import { Playlist, Song } from "@shared/types";
 import { getUserUploadedTracks } from "@/services/tracks";
 import { getUserPlaylists } from "@/services/playlist";

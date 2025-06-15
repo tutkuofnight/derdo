@@ -1,17 +1,5 @@
 import db from "@/config/db"
-import JoinCard from "./components/JoinCard"
-
-const getUser = async (userId: string) => {
-  "use server"
-  const { rows } = await db.query(`SELECT name, image FROM users WHERE id = $1`, [userId])
-  return rows[0]
-}
-
-const getPlaylistName = async (id: string) => {
-  "use server"
-  const { rows } = await db.query(`SELECT name FROM playlist WHERE id = $1`, [id])
-  return rows[0]
-}
+import JoinCard from "./join-card"
 
 // export async function generateMetadata({ params }: { params: Promise<{ id: string }>}) {
 //   const { id } = await params
@@ -26,6 +14,12 @@ const getPlaylistName = async (id: string) => {
 //     }
 //   }
 // }
+
+const getPlaylistName = async (id: string) => {
+  "use server"
+  const { rows } = await db.query(`SELECT name FROM playlist WHERE id = $1`, [id])
+  return rows[0]
+}
 
 export default async function({ params }: { params: Promise<{ id: string }>}){
   const { id } = await params

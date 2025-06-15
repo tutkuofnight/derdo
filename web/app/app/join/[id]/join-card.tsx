@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Disc3 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import useSocket from "@/hooks/useSocket"
-import { useSession } from "next-auth/react"
 
 export default function({ roomId, playlistName, user }: { roomId: string, playlistName?: string, user: any }){
   const { push } = useRouter()

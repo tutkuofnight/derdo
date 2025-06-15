@@ -7,3 +7,9 @@ export type UpdateSongFormDto = {
   song?: string
   userId?: string
 } 
+
+export type TrackInfo = {
+  name: string
+  artist: string
+  featurings?: string
+}

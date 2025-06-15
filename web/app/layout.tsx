@@ -3,9 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google"
 import StoreProvider from "@/store/StoreProvider"
 import { ThemeProvider } from "@/components/providers/ThemeProvider"
 import SessionProvider from "@/components/providers/SessionProvider"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 import AudioPlayer from "@/components/AudioPlayer/default"
 import "./globals.css"
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -68,7 +69,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               enableSystem
               disableTransitionOnChange>
               {children}
-              <Toaster />
+              <Toaster position="bottom-right" />
               <AudioPlayer />
             </ThemeProvider>
           </StoreProvider>
