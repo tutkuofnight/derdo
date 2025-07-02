@@ -43,7 +43,7 @@ export const getPlaylistTracks = async (playlistId: string) => {
   // return rows
   if (error) {
     console.log("get playlist tracks error", error)
-    return false
+    return []
   } else {
     return data as Song[]
   }
