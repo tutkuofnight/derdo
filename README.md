@@ -35,6 +35,7 @@ Live it. Share it. Feel it. Together.
 - **Express.js** – Lightweight Node.js server.
 - **Supabase** – Backend-as-a-service (authentication, real-time, storage).
 - **PostgreSQL** – Relational database powered by Supabase.
+- **Redis** - A key-value Database for Real-Time operations.
 ---
 
 ## ✨ Roadmap
