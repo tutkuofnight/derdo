@@ -58,16 +58,19 @@ export default function Home() {
       </section>
 
       <section>
-        <div className="flex flex-col items-center gap-4 rounded-md">
-          <h2 className="text-3xl font-bold">Features</h2>
-          <div className="flex flex-col md:flex-row w-full gap-4">
+        <div className="flex flex-col items-center gap-8 rounded-md">
+          <h2 className="text-3xl font-bold">The Steps Using <span className="rounded-md bg-neutral-800 font-logo font-normal">derdo</span></h2>
+          <div className="flex flex-col md:flex-row w-full gap-8">
             {featuresData.map((feature, index) => (
-              <div key={index} className="flex flex-col items-center w-full gap-2 p-4 rounded-md border cursor-pointer border-gray-200 dark:border-gray-600 transition-all duration-300 hover:border-black hover:dark:border-white">
+              <div key={index} className="flex flex-col items-center justify-center w-full h-[300px] gap-6 p-4 px-8 rounded-lg bg-neutral-800/60 transition-all duration-300 hover:bg-neutral-300 hover:dark:bg-neutral-800/80">
                 {feature.icon}
-                <h3 className="text-xl font-bold">{feature.title}</h3>
-                <p className="text-center">{feature.description}</p>
+                <div className="flex flex-col items-center justify-center gap-2 px-4">
+                  <h3 className="text-xl font-bold">{feature.title}</h3>
+                  <p className="text-center">{feature.description}</p>
+                </div>
               </div>
             ))}
+
           </div>
         </div>
       </section>

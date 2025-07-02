@@ -1,8 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import db from "@/config/db";
 import { ExtendedProfile, User } from "@shared/types";
 import ProfileImageResizer from "@/utils/profile-image-resizer";
+import supabase from "@/lib/supabase";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,20 +14,22 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }): Promise<any> {
-      const user: User | any = (await db.query(`SELECT * FROM users WHERE id = $1`, [token.sub])).rows[0];
-      session.user = user;
-      if (session.user) {
-        session.user.image = await ProfileImageResizer(session.user.image!);
+      const { data, error } = await supabase.from("users").select("*").eq("id", token.sub).single()
+      if (!error) {
+        session.user = data;
       }
+      session.user.image = await ProfileImageResizer(session.user.image!);
       return session;
     },
     async jwt({ token, account, profile }) {
       if (account?.provider === 'google' && profile) {
         const userProfile = profile as ExtendedProfile;
-        await db.query(`INSERT INTO users (id, name, email, image)
-         VALUES ($1, $2, $3, $4)
-         ON CONFLICT (id) DO NOTHING;`, [userProfile.sub, userProfile.name, userProfile.email, userProfile.picture]);
-        token.id = userProfile.sub;
+        await supabase.from("users").upsert({
+          id: userProfile.sub,
+          name: userProfile,
+          email: userProfile.email,
+          image: userProfile.picture
+        }, { onConflict: 'id', ignoreDuplicates: true })
       }
       return token;
     },
