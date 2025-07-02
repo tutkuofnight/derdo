@@ -18,7 +18,6 @@ export default async function PlaylistPage({ params }: { params: Promise<{ id: s
     )
   }
 
-
   const playlistTracks: Song[] = await getPlaylistTracks(id)
 
   return <AppLayout>

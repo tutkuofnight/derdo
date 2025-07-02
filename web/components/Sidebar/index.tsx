@@ -3,7 +3,7 @@ import { Playlist } from "@shared/types"
 import Client from "./client"
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/options";
 
 export default async function Sidebar(){
   const session = await getServerSession(authOptions);

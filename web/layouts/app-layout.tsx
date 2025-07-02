@@ -2,7 +2,6 @@
 
 import Header from "@/components/Header"
 import {
-  ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
@@ -30,8 +29,8 @@ export default function AppLayout({ playlists, children }: { playlists?: Playlis
       <ResizablePanel defaultSize={20} minSize={20} maxSize={30} style={{ padding: "20px" }} className="hidden md:block">
         {memoizedSidebar}
       </ResizablePanel>
-      <ResizableHandle className="hidden md:block" />
-      <ResizablePanel defaultSize={75} style={{ padding: "20px" }}>
+      <ResizablePanel defaultSize={20} minSize={20} maxSize={30} style={{ padding: "20px" }}>
+        <Sidebar />
         <Header />
         {children}
       </ResizablePanel>
