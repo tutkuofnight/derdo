@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers'
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/options";
 
 export const setCookie = async (name:string, value: string) => {
   const cookieStore = await cookies()

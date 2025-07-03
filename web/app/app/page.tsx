@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/options"
-import { Playlist, Song } from "@shared/types";
+import { Song } from "@shared/types";
 import { getUserUploadedTracks } from "@/services/tracks";
 import SayWelcome from "@/components/SayWelcome";
 import Tracklist from "@/components/Tracklist";
@@ -20,7 +20,6 @@ export default async function Page() {
   const userId = session.user.id;
 
   const tracks: Song[] = await getUserUploadedTracks(userId);
-  const playlists: Playlist[] = await getUserPlaylists(userId);
 
   return (
     <AppLayout>
